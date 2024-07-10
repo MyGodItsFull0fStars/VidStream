@@ -1,10 +1,9 @@
-/*package com.media.mediaserverclient.controller;
+package com.media.mediaserverclient.controller;
 
 import com.media.mediaserverclient.VideoRepository;
+import com.media.mediaserverclient.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class VideoController {
@@ -18,9 +17,24 @@ public class VideoController {
     @PostMapping
     public String addVideo(@RequestParam String title, @RequestParam String path) {
 
+        Video video = new Video();
+        video.setTitle(title);
+        video.setPath(path);
+        videoRepository.save(video);
 
         return "add meaningful response";
     }
+
+    @GetMapping("/list")
+    public Iterable<Video> getAllVideos() {
+        return videoRepository.findAll();
+    }
+
+    @GetMapping("/find/{id}")
+    public Video getVideo(@PathVariable Integer id) {
+        return videoRepository.findById(id).orElse(new Video());
+    }
+
 
 //    TODO
 //    - getVideos
@@ -29,4 +43,3 @@ public class VideoController {
 }
 
 
- */
