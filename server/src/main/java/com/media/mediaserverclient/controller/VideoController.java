@@ -5,6 +5,8 @@ import com.media.mediaserverclient.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
+
 @RestController
 public class VideoController {
 
@@ -13,8 +15,22 @@ public class VideoController {
 
     // TODO see https://www.jetbrains.com/help/idea/spring-support-tutorial.html#create-controller
 
+    @GetMapping("/init/{numberOfVideos}")
+    public String initDummyData(@PathVariable Integer numberOfVideos) {
+        int count = 0;
+        for (Video value : videoRepository.findAll()) {
+            count++;
+        }
+        for (int i = 1; i <= numberOfVideos; i++) {
+            Video video = new Video();
+            video.setTitle("Video " + (count + i));
+            video.setPath("/tmp/video" + (count + i));
+            videoRepository.save(video);
+        }
+        return "Success";
+    }
 
-    @PostMapping
+    @PostMapping("/add")
     public String addVideo(@RequestParam String title, @RequestParam String path) {
 
         Video video = new Video();

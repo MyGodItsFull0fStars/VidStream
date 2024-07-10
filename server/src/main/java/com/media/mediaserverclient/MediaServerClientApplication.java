@@ -1,10 +1,11 @@
 package com.media.mediaserverclient;
 
+import com.media.mediaserverclient.controller.VideoController;
+import com.media.mediaserverclient.model.Video;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.GetExchange;
 
 @SpringBootApplication
@@ -27,38 +28,36 @@ public class MediaServerClientApplication {
 
     @GetMapping("/userInfo")
     public String getInfo(@RequestParam(value = "usr_id", defaultValue = "Please enter a valid user ID") String id) {
-        if (id.equals("1")){
+        if (id.equals("1")) {
             return String.format("UserID: %s, Name: Luka", id);
         }
-        if (id.equals("2")){
+        if (id.equals("2")) {
             return String.format("UserID: %s, Name: Christian", id);
         }
-        if (id.equals("3")){
+        if (id.equals("3")) {
             return String.format("UserID: %s, Name: Michael", id);
         }
-        if (id.equals("4")){
+        if (id.equals("4")) {
             return String.format("UserID: %s, Name: David", id);
         }
-        if (id.equals("5")){
+        if (id.equals("5")) {
             return String.format("UserID: %s, Name: John", id);
         }
-        if (id.equals("6")){
+        if (id.equals("6")) {
             return String.format("UserID: %s, Name: Jack", id);
         }
-        if (id.equals("7")){
+        if (id.equals("7")) {
             return String.format("UserID: %s, Name: James", id);
         }
-        if (id.equals("8")){
+        if (id.equals("8")) {
             return String.format("UserID: %s, Name: Gustavo", id);
         }
-        if (id.equals("9")){
+        if (id.equals("9")) {
             return String.format("UserID: %s, Name: Walter", id);
         }
-        if (id.equals("10")){
+        if (id.equals("10")) {
             return String.format("UserID: %s, Name: Jessie", id);
-        }
-        else return String.format("Invalid UserID: %s", id);
-
+        } else return String.format("Invalid UserID: %s", id);
 
 
     }
