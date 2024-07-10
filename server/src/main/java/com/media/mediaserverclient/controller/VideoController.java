@@ -1,4 +1,4 @@
-package com.media.mediaserverclient.controller;
+/*package com.media.mediaserverclient.controller;
 
 import com.media.mediaserverclient.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,3 +27,6 @@ public class VideoController {
 //    - getVideoById
 
 }
+
+
+ */
