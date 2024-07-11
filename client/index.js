@@ -1,37 +1,69 @@
-const serverUrl = 'http://localhost:8080';
-const RestClient = require('./rest-client')
+// const RestClient = require('./rest-client')
 
-const API_BASE_URL = '127.0.0.1:8080'
-const client = new RestClient(API_BASE_URL);
+const API_BASE_URL = 'http://127.0.0.1:8080'
+// const client = new RestClient(API_BASE_URL);
+//
+// async function initDummyData() {
+//     const newPost = {
+//         title: 'new post title',
+//         body: 'new post body',
+//         userId: 1,
+//     };
+//     const createdPost = await client.post('/init/{numberOfVideos}', newPost);
+//     console.log('POST /init/{numberOfVideos}:', newPost);
+// }
+//
+// async function getAllVideos() {
+//     const list = await client.get('/list');
+//     console.log('GET /list:', list);
+// }
+//
+// async function getVideo() {
+//     const video = await client.get('/find/{id}');
+//     console.log('GET /find{id}:', video);
+// }
+//
+// async function addVideo() {
+//     const addPostVideo = {
+//         title: 'new video title',
+//         body: 'new video body',
+//         userId: 1,
+//     };
+//     const createNewVideo = await client.post('add', addPostVideo);
+//     console.log('POST /add', addPostVideo)
+// }
 
-async function initDummyData(){
-    const newPost = {
-        title: 'new post title',
-        body: 'new post body',
-        userId: 1,
-    };
-    const createdPost = await client.post('/init/{numberOfVideos}', newPost);
-    console.log('POST /init/{numberOfVideos}:', newPost);
+const userAction = async () => {
+    const response = await fetch('http://example.com/movies.json');
+    const myJson = await response.json(); //extract JSON from the http response
+    // do something with myJson
 }
 
-async function getAllVideos(){
-    const list = await client.get('/list');
-    console.log('GET /list:', list);
+async function testInit(numberOfVideos){
+    const response = await fetch(`${API_BASE_URL}/init/${numberOfVideos}`, {
+        method: 'POST',
+        body: {"title": "testtitle", "path": "asdfasdf"}, // string or object
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const myJson = await response; //extract JSON from the http response
+    // do something with myJson
+    console.log(myJson);
+
+    async function testInit(numberOfVideos){
+    const response = await fetch(`${API_BASE_URL}/init/${numberOfVideos}`, {
+        method: 'POST',
+        body: {"title": "testtitle", "path": "asdfasdf"}, // string or object
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const myJson = await response; //extract JSON from the http response
+    // do something with myJson
+    console.log(myJson);
 }
 
-async function getVideo(){
-    const video = await client.get('/find/{id}');
-    console.log('GET /find{id}:', video);
-}
+testInit(1);
 
-async function addVideo(){
-    const addPostVideo = {
-        title: 'new video title',
-        body: 'new video body',
-        userId: 1,
-    };
-    const createNewVideo = await client.post('add', addPostVideo);
-    console.log('POST /add', addPostVideo)
-}
-
-getAllVideos();
+// getAllVideos();
