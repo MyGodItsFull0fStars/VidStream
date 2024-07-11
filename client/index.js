@@ -1,7 +1,7 @@
 const serverUrl = 'http://localhost:8080';
 const RestClient = require('./rest-client')
 
-const API_BASE_URL = 'http://localhost:8080'
+const API_BASE_URL = '127.0.0.1:8080'
 const client = new RestClient(API_BASE_URL);
 
 async function initDummyData(){
@@ -33,3 +33,5 @@ async function addVideo(){
     const createNewVideo = await client.post('add', addPostVideo);
     console.log('POST /add', addPostVideo)
 }
+
+getAllVideos();

@@ -3,7 +3,7 @@ class RestClient {
     constructor(baseURL) {
         this.client = axios.create({
             baseURL: baseURL,
-            headers: { 'Content-Type': 'application/text' },
+            headers: { 'Content-Type': 'application/json' },
         });
     }
 
