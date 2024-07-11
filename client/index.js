@@ -1,40 +1,72 @@
-/**
- * To start the RESTClient, execute `node index.js` in the terminal
- */
+const express = require('express');
+const app = express();
+const VideoRepository = require('./videoRepository');
 
-const RestClient = require('./rest-client');
+app.get('/init/:numberOfVideos', async (req, res) => {
+    const numberOfVideos = parseInt(req.params.numberOfVideos, 10);
+    let count = 0;
 
-// First try to execute this "entrypoint" file before making any changes to it to see if everything works
-// TODO change URL
-const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
-const client = new RestClient(API_BASE_URL);
+    try {
+        const allVideos = await VideoRepository.findAll();
+        count = allVideos.length;
 
-// TODO change REST calls to existing calls
-(async () => {
-    // GET request example
-    const posts = await client.get('/posts');
-    console.log('GET /posts:', posts);
+        for (let i = 1; i <= numberOfVideos; i++) {
+            const video = {
+                title: `Video ${count + i}`,
+                path: `/tmp/video${count + i}`
+            };
+            await VideoRepository.save(video);
+        }
 
-    // POST request example
-    const newPost = {
-        title: 'New post title',
-        body: 'New post body',
-        userId: 1,
-    };
-    const createdPost = await client.post('/posts', newPost);
-    console.log('POST /posts:', createdPost);
+        res.send('Success');
+    } catch (error) {
+        res.status(500).send('Error initializing dummy data');
+    }
+});
 
-    // PUT request example
-    const updatedPost = {
-        id: 1,
-        title: 'Updated post title',
-        body: 'Updated post body',
-        userId: 1,
-    };
-    const result = await client.put(`/posts/${updatedPost.id}`, updatedPost);
-    console.log(`PUT /posts/${updatedPost.id}:`, result);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    // DELETE request example
-    const deletedPost = await client.delete('/posts/1');
-    console.log('DELETE /posts/1:', deletedPost);
-})();
+app.post('/add', async (req, res) => {
+    const { title, path } = req.body;
+
+    try {
+        const video = {
+            title: title,
+            path: path
+        };
+        await VideoRepository.save(video);
+
+        res.send('add meaningful response');
+    } catch (error) {
+        res.status(500).send('Error adding video');
+    }
+});
+
+app.get('/list', async (req, res) => {
+    try {
+        const allVideos = await VideoRepository.findAll();
+        res.json(allVideos);
+    } catch (error) {
+        res.status(500).send('Error retrieving videos');
+    }
+});
+
+app.get('/find/:id', async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    try {
+        const video = await VideoRepository.findById(id);
+        if (video) {
+            res.json(video);
+        } else {
+            res.json({ title: "", path: "" });
+        }
+    } catch (error) {
+        res.status(500).send('Error retrieving video');
+    }
+});
+
+
+
+
