@@ -29,5 +29,9 @@ pip install fastapi uvicorn
 Start FastAPI server:
 
 ```bash
+fastapi dev main.py
+
+# or
+
 uvicorn main:app --reload
 ```
