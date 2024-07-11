@@ -11,13 +11,13 @@ Install Anaconda or [Miniconda](https://docs.anaconda.com/miniconda/).
 Create Anaconda Python environment:
 
 ```bash
-conda create -n myenv python=3.11
+conda create -n server python=3.11
 ```
 
 Activate environment:
 
 ```bash
-conda activate myenv
+conda activate server
 ```
 
 Install FastAPI and Uvicorn:
