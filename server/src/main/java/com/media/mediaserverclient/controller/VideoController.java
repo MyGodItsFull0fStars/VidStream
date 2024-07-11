@@ -15,7 +15,7 @@ public class VideoController {
 
     // TODO see https://www.jetbrains.com/help/idea/spring-support-tutorial.html#create-controller
 
-    @GetMapping("/init/{numberOfVideos}")
+    @PostMapping("/init/{numberOfVideos}")
     public String initDummyData(@PathVariable Integer numberOfVideos) {
         int count = 0;
         for (Video value : videoRepository.findAll()) {
