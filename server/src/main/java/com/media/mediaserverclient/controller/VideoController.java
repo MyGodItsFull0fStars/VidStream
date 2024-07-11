@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 @RestController
 public class VideoController {
@@ -16,29 +17,30 @@ public class VideoController {
     // TODO see https://www.jetbrains.com/help/idea/spring-support-tutorial.html#create-controller
 
     @PostMapping("/init/{numberOfVideos}")
-    public String initDummyData(@PathVariable Integer numberOfVideos) {
+    public Iterable<Video> initDummyData(@PathVariable Integer numberOfVideos) {
         int count = 0;
         for (Video value : videoRepository.findAll()) {
             count++;
         }
+        LinkedList<Video> videos = new LinkedList<>();
         for (int i = 1; i <= numberOfVideos; i++) {
             Video video = new Video();
             video.setTitle("Video " + (count + i));
             video.setPath("/tmp/video" + (count + i));
-            videoRepository.save(video);
+            videos.add(video);
         }
-        return "Success";
+        videoRepository.saveAll(videos);
+        return videos;
     }
 
     @PostMapping("/add")
-    public String addVideo(@RequestParam String title, @RequestParam String path) {
+    public Video addVideo(@RequestParam String title, @RequestParam String path) {
 
         Video video = new Video();
         video.setTitle(title);
         video.setPath(path);
-        videoRepository.save(video);
 
-        return "add meaningful response";
+        return videoRepository.save(video);
     }
 
     @GetMapping("/list")
