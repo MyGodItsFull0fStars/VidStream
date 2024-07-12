@@ -20,10 +20,16 @@ Activate environment:
 conda activate server
 ```
 
+Install Pydantic for data models:
+
+```bash
+conda install pydantic -c conda-forge
+```
+
 Install FastAPI and Uvicorn:
 
 ```bash
-pip install fastapi uvicorn
+pip install fastapi uvicorn yt-dlp
 ```
 
 Start FastAPI server:
