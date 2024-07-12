@@ -10,4 +10,5 @@ class Video(BaseModel):
 
     def from_file(video_file_path: str) -> "Video":
         # TODO load video instance from given file path
-        pass
+
+        return Video(name='test', url='asdf')
