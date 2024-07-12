@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const VideoRepository = require('./videoRepository');
+// const VideoRepository = require('./videoRepository');
 
 app.get('/init/:numberOfVideos', async (req, res) => {
     const numberOfVideos = parseInt(req.params.numberOfVideos, 10);
