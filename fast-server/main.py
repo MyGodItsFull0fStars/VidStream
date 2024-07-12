@@ -15,8 +15,8 @@ async def read_root() -> dict[str, str]:
     # TODO return proper starting page
     return {"Hello": "World"}
 
-    
-# Why `put` instead of `post`? 
+
+# Why `put` instead of `post`?
 # See: https://restfulapi.net/rest-put-vs-post/
 @app.put('/videos/download_video')
 async def download_video(video: Video) -> Video:
