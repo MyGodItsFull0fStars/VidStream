@@ -1,6 +1,6 @@
 
 
-def download_video_from_url(url: str) -> bool:
+def download_video_from_url(video_name: str, url: str) -> bool:
     """Download video from given URL
 
     Parameters
@@ -15,6 +15,8 @@ def download_video_from_url(url: str) -> bool:
     """
     
     # only return True if the download was successful
+    # os.system(url)
+    
     return True
 
 def encode_video(video_file_path: str) -> bool:
