@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
-class url(BaseModel):
+class URL(BaseModel):
     url: str
 
 video_db: list[Video] = []
@@ -30,18 +30,18 @@ video_db: list[Video] = []
 
 # TODO add all exising videos to video_db
 
-@app.put("/download/")
-async def download_video(video: url):
+@app.put("/download")
+async def download_video_via_url(video: URL):
     # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
     try:
-        output_path = os.path.join(os.getcwd, 'downlaods')
+        output_path = os.path.join(os.getcwd, 'downloads')
         if not os.path.exists(output_path):
             os.makedirs(output_path)
         
         background_command = [
             'yt-dlp',
+            '-o', os.path.join(output_path, f'{video.url}'),
             video.url,
-            '-o', os.path.join(output_path, '%(title)s.%(ext)s')
         ]
         subprocess.run(background_command, check=True)
         
@@ -83,22 +83,22 @@ async def get_video_list() -> list[Video]:
 
 # Why `put` instead of `post`?
 # See: https://restfulapi.net/rest-put-vs-post/
-@app.put('/videos/download_video')
-async def download_video(video: Video) -> Video:
-    """Downloads the video onto the server for later retrieval
-
-    Parameters
-    ----------
-    
-
-    Returns
-    -------
-    JSON
-        Returns a description of the success and infos of the downloaded video
-    """
-    # TODO validate URL (for later)
-    # TODO download video using yt-dlp
-    # TODO return meaningful response, handle errors too!
-    
-    # download_video_from_url(...)
-    return video
+#@app.put('/videos/download_video')
+#async def download_video(video: Video) -> Video:
+#    """Downloads the video onto the server for later retrieval
+#
+#    Parameters
+#    ----------
+#    
+#
+#    Returns
+#    -------
+#    JSON
+#        Returns a description of the success and infos of the downloaded video
+#    """
+#    # TODO validate URL (for later)
+#    # TODO download video using yt-dlp
+#    # TODO return meaningful response, handle errors too!
+#    
+#    # download_video_from_url(...)
+#    return video
