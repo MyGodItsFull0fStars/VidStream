@@ -26,7 +26,7 @@ video_db: list[Video] = []
 
 @app.get("/")
 async def read_root() -> dict[str, str]:
-    # TODO return proper starting page
+    # TODO return proper starting page [done]
     try:
         index_file_path = Path("/mnt/c/Users/Luka/IdeaProjects/untitled1/media-server-client/fast-server/index.html")
         if index_file_path.exists():
