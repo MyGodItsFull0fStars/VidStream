@@ -13,7 +13,7 @@ video_db: list[Video] = []
 @app.get("/")
 async def read_root() -> dict[str, str]:
     # TODO return proper starting page
-    return {"Hello": "World"}
+    return {"Hello": "Planet"}
 
 
 # Why `put` instead of `post`?
