@@ -40,7 +40,8 @@ async def download_video_via_url(video: URL):
         
         background_command = [
             'yt-dlp',
-            '-o', os.path.join(output_path, f'{video.url}'),
+            '-o', os.path.join(output_path, '%(title)s.%(ext)s'),
+            '--merge-output-format mp4',
             video.url,
         ]
         subprocess.run(background_command, check=True)
