@@ -38,3 +38,6 @@ build/
 
 ### Python stuff
 *.pyc
+
+### Video Content
+*.mp4
