@@ -2,7 +2,11 @@ from typing import Any, Union
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pathlib import Path
+from pydantic import BaseModel
 import logging
+import os
+import subprocess
+
 
 
 from video_utility.video_model import Video
@@ -12,16 +16,41 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
+class url(BaseModel):
+    url: str
+
 video_db: list[Video] = []
        
        
 # TODO 1. Install Python dependencies (pydantic, yt-dlp) [done]
 # TODO 2. Try out yt-dlp [done]
 # TODO 3. Add proper starting page [done]
-# TODO 4. Download YT video via REST PUT call
+# TODO 4. Download YT video via REST PUT call [done]
 # TODO 5. list all existing videos via REST call
 
 # TODO add all exising videos to video_db
+
+@app.put("/download/")
+async def download_video(video: url):
+    # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
+    try:
+        output_path = os.path.join(os.getcwd, 'downlaods')
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
+        
+        background_command = [
+            'yt-dlp',
+            video.url,
+            '-o', os.path.join(output_path, '%(title)s.%(ext)s')
+        ]
+        subprocess.run(background_command, check=True)
+        
+        return {"message": "Video downloaded successfully", "path": output_path}
+    
+    except subprocess.CalledProcessError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+        
 
 
 @app.get("/")
