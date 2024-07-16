@@ -20,11 +20,11 @@ app = FastAPI()
 class URL(BaseModel):
     url: str
 
-    @validators('url')
-    def validate_url(cls, v):
-        if not validators.url(v):
-            raise ValueError('Invalid URL')
-        return v
+#    @validators('url')
+#    def validate_url(URL, url):
+#        if not validators.url(url):
+#            raise ValueError('Invalid URL')
+#        return url
 
 video_db: list[Video] = []
        
