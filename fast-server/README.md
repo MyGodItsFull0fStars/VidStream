@@ -29,7 +29,7 @@ conda install pydantic -c conda-forge
 Install FastAPI and Uvicorn:
 
 ```bash
-pip install fastapi uvicorn yt-dlp
+pip install fastapi uvicorn yt-dlp pytest
 ```
 
 Start FastAPI server:
