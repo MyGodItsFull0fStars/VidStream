@@ -18,11 +18,12 @@ if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
 
 video_db: list[Video] = []
+
 for video in os.listdir('downloads/'):
     if video.endswith('.mp4'):
         video_db.append(video)
     elif video.endswith('.webm'):
-        video_db.append(video)    
+        video_db.append(video)
 
 
 def url_check(url):
@@ -47,25 +48,25 @@ def url_check(url):
 
 
 @app.put("/download")
-async def download_video_via_url(video: URL):
+async def download_video_via_url(url_model: URL) -> HTMLResponse:
     # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
     try:
 
         background_command = [
             'yt-dlp',
             '-o', os.path.join(OUTPUT_PATH, '%(title)s.%(ext)s'),
-            video.url,
+            url_model.url,
         ]
         subprocess.run(background_command, check=True)
 
-        return {"message": "Video downloaded successfully", "path": OUTPUT_PATH}
+        return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=201)
 
     except subprocess.CalledProcessError as error:
         raise HTTPException(status_code=400, detail=str(error))
-    
+
 
 @app.get("/download")
-async def download_video():
+async def download_video() -> HTMLResponse:
     try:
 
         index_file_path = Path("download.html")
@@ -87,7 +88,7 @@ async def download_video():
 
 
 @app.get("/")
-async def read_root() -> dict[str, str]:
+async def read_root() -> HTMLResponse:
     # TODO return proper starting page [done]
     try:
 
@@ -118,8 +119,8 @@ async def get_video_list() -> list[Video]:
     # TODO convert list to dictionary
     return video_db
 
-#@app.get("/list")
-#async def download_video():
+# @app.get("/list")
+# async def download_video():
 #    try:
 #
 #        index_file_path = Path("list.html")
@@ -138,9 +139,6 @@ async def get_video_list() -> list[Video]:
 #        logging.exception(
 #            f"An error occurred while reading the index file {e}")
 #        raise HTTPException(status_code=500, detail="Internal Server Error")
-
-
-
 
 
 # Why `put` instead of `post`?
