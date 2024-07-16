@@ -1,5 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Roboto', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .container {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .dark-mode {
+      background-color: #000000;
+      color: #ffffff;
+    }
+    .light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .dark-mode .input-field input {
+      color: #ffffff;
+      border-bottom: 1px solid #ffffff;
+    }
+    .dark-mode .input-field label {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="light-mode">
+
+  <div class="container">
+    <div class="switch">
+      <label>
+        Light
+        <input type="checkbox" id="mode-switch">
+        <span class="lever"></span>
+        Dark
+      </label>
+    </div>
+    <div class="input-field">
+      <input id="text" type="text" class="validate">
+      <label for="text">Video URL</label>
+    </div>
+    <button class="btn waves-effect waves-light" type="submit" name="action">Download
+      <i class="material-icons right"></i>
+    </button>
+  </div>
+
+  <script>
+    document.getElementById('mode-switch').addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+      }
+    });
+
+    document.getElementById('submit-button').addEventListener('click', function() {
+      const textValue = document.getElementById('text').value;
+      alert('Text field value: ' + textValue);
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -20,3 +116,4 @@
 </body>
 
 </html>
+-->
