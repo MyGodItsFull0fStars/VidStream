@@ -49,7 +49,6 @@ def url_check(url):
 @app.put("/download")
 async def download_video_via_url(video: URL):
     # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
-    # TODO fix error 405
     try:
 
         background_command = [
