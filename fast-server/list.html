@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .dark-mode .video-item {
+      background-color: #333333;
+      border-bottom: 1px solid #555555;
+    }
+    .light-mode .video-item {
+      background-color: #ffffff;
+      border-bottom: 1px solid #cccccc;
+    }
+    .video-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      transition: background-color 0.3s, border-bottom 0.3s;
+    }
+    .video-item .info {
+      flex-grow: 1;
+      margin-right: 20px;
+    }
+    .video-item .info h5,
+    .video-item .info p {
+      margin: 0;
+    }
+    .video-item .play-button {
+      color: #ffffff;
+      background-color: #00796b;
+    }
+  </style>
+</head>
+<body class="light-mode">
+
+  <div class="container">
+    <div class="switch">
+      <label>
+        Light
+        <input type="checkbox" id="mode-switch">
+        <span class="lever"></span>
+        Dark
+      </label>
+      <a href="http://localhost:8000/" class="btn waves-effect waves-light">Zurück zur Homepage</a>
+    </div>
+
+    <h1>Video Liste</h1>
+    <ul id="video-list" class="collection">
+      <!-- Videos werden hier dynamisch hinzugefügt -->
+    </ul>
+  </div>
+
+  <script>
+    const videos = [
+      { title: 'Video 1', description: 'Beschreibung des ersten Videos', url: 'https://www.example.com/video1' },
+      { title: 'Video 2', description: 'Beschreibung des zweiten Videos', url: 'https://www.example.com/video2' },
+      { title: 'Video 3', description: 'Beschreibung des dritten Videos', url: 'https://www.example.com/video3' }
+    ];
+
+    document.getElementById('mode-switch').addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+      }
+    });
+
+    function loadVideos() {
+      const videoList = document.getElementById('video-list');
+      videos.forEach(video => {
+        const li = document.createElement('li');
+        li.classList.add('collection-item', 'video-item');
+        
+        li.innerHTML = `
+          <div class="info">
+            <h5>${video.title}</h5>
+            <p>${video.description}</p>
+          </div>
+          <a href="${video.url}" class="btn-small waves-effect waves-light play-button" target="_blank">Play</a>
+        `;
+        
+        videoList.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadVideos);
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
