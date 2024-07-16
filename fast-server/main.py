@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import logging
 import os
 import subprocess
+import validators
 
 
 
@@ -18,6 +19,12 @@ app = FastAPI()
 
 class URL(BaseModel):
     url: str
+
+    @validators('url')
+    def validate_url(cls, v):
+        if not validators.url(v):
+            raise ValueError('Invalid URL')
+        return v
 
 video_db: list[Video] = []
        
@@ -97,7 +104,7 @@ async def get_video_list() -> list[Video]:
 #    JSON
 #        Returns a description of the success and infos of the downloaded video
 #    """
-#    # TODO validate URL (for later)
+#    # TODO validate URL (for later) [done]
 #    # TODO download video using yt-dlp
 #    # TODO return meaningful response, handle errors too!
 #    
