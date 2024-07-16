@@ -3,10 +3,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from pydantic import BaseModel
+from urllib.parse import urlparse
 import logging
 import os
 import subprocess
 import validators
+
 
 
 
@@ -20,11 +22,15 @@ app = FastAPI()
 class URL(BaseModel):
     url: str
 
-#    @validators('url')
-#    def validate_url(URL, url):
-#        if not validators.url(url):
-#            raise ValueError('Invalid URL')
-#        return url
+def url_check(url):
+    try:
+        result = urlparse(url)
+        if all([result.scheme, result.netloc]):
+            return True
+        else:
+            return False
+    except:
+        return False
 
 video_db: list[Video] = []
        
