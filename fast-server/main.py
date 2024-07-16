@@ -49,7 +49,7 @@ async def download_video_via_url(video: URL):
         return {"message": "Video downloaded successfully", "path": output_path}
     
     except subprocess.CalledProcessError as error:
-        raise HTTPException(status_code=500, detail=str(error))
+        raise HTTPException(status_code=400, detail=str(error))
 
         
 
