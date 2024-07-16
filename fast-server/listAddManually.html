@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video List add manually</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .dark-mode .input-field input,
+    .dark-mode .input-field textarea {
+      color: #ffffff;
+      border-bottom: 1px solid #ffffff;
+    }
+    .dark-mode .input-field label {
+      color: #ffffff;
+    }
+    .video-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .video-item .info {
+      flex-grow: 1;
+      margin-right: 20px;
+    }
+    .video-item .info h5,
+    .video-item .info p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="light-mode">
+
+  <div class="container">
+    <div class="switch">
+      <label>
+        Light
+        <input type="checkbox" id="mode-switch">
+        <span class="lever"></span>
+        Dark
+      </label>
+    </div>
+
+    <h1>Video Liste</h1>
+    <div class="input-field">
+      <input id="video-title" type="text" class="validate">
+      <label for="video-title">Video Titel</label>
+    </div>
+    <div class="input-field">
+      <textarea id="video-description" class="materialize-textarea"></textarea>
+      <label for="video-description">Video Beschreibung</label>
+    </div>
+    <button class="btn waves-effect waves-light" type="button" id="add-video-button">Video hinzufügen</button>
+
+    <ul id="video-list" class="collection">
+      <!-- Videos werden hier hinzugefügt -->
+    </ul>
+    <a href="http://localhost:8000/" class="btn waves-effect waves-light">Zurück zur Homepage</a>
+  </div>
+
+  <script>
+    document.getElementById('mode-switch').addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+      }
+    });
+
+    document.getElementById('add-video-button').addEventListener('click', function() {
+      const title = document.getElementById('video-title').value;
+      const description = document.getElementById('video-description').value;
+      
+      if (title && description) {
+        const videoList = document.getElementById('video-list');
+        const li = document.createElement('li');
+        li.classList.add('collection-item', 'video-item');
+        
+        li.innerHTML = `
+          <div class="info">
+            <h5>${title}</h5>
+            <p>${description}</p>
+          </div>
+          <button class="btn-small waves-effect waves-light play-button">Play</button>
+        `;
+        
+        videoList.appendChild(li);
+        
+        li.querySelector('.play-button').addEventListener('click', function() {
+          alert('Playing: ' + title);
+          // Hier kannst du den Code zum Abspielen des Videos hinzufügen
+        });
+
+        // Felder nach dem Hinzufügen leeren
+        document.getElementById('video-title').value = '';
+        document.getElementById('video-description').value = '';
+        M.updateTextFields();  // Update Materialize labels
+      } else {
+        alert('Bitte fülle beide Felder aus!');
+      }
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
