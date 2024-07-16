@@ -68,7 +68,7 @@ async def read_root() -> dict[str, str]:
         index_file_path = Path("/mnt/c/Users/Luka/IdeaProjects/untitled1/media-server-client/fast-server/index.html")
         if index_file_path.exists():
             content = index_file_path.read_text()
-            logging.debug(f"File content: {content}")
+            #logging.debug(f"File content: {content}")
             return HTMLResponse(content=content, status_code=200)
             #logging.debug(f"Index file found at {index_file_path}")
             #return HTMLResponse(content=index_file_path.read_text(), status_code=200)
