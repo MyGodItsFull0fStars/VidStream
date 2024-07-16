@@ -114,31 +114,49 @@ async def read_root() -> HTMLResponse:
 #        return HTMLResponse(content=index_file_path.read_text(), status_code=200)
 
 
-@app.get("/list")
-async def get_video_list() -> list[Video]:
-    # TODO convert list to dictionary
-    return video_db
+#@app.get("/list")
+#async def get_video_list() -> list[Video]:
+#    # TODO convert list to dictionary
+#    return video_db
 
-# @app.get("/list")
-# async def download_video():
-#    try:
-#
-#        index_file_path = Path("list.html")
-#
-#        if index_file_path.exists():
-#            content = index_file_path.read_text(encoding='utf-8')
-#            # logging.debug(f"File content: {content}")
-#            return HTMLResponse(content=content, status_code=200)
-#            # logging.debug(f"Index file found at {index_file_path}")
-#            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
-#        else:
-#            logging.error(f"Index file not found at {index_file_path}")
-#            raise HTTPException(status_code=404, detail="Index file not found")
-#
-#    except Exception as e:
-#        logging.exception(
-#            f"An error occurred while reading the index file {e}")
-#        raise HTTPException(status_code=500, detail="Internal Server Error")
+@app.get('/list')
+async def video_list():
+    try:
+        index_file_path = Path('list.html')
+
+        if index_file_path.exists():
+            content = index_file_path.read_text(encoding='utf-8')
+            return HTMLResponse(content=content, status_code=200)
+        else:
+            logging.error(f"Index file not found at {index_file_path}")
+            raise HTTPException(status_code=404, detail="Index file not found")
+        
+    except Exception as e:
+        logging.exception(
+            f"An error occurred while reading the index file {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+        
+
+@app.get("/listAddManually")
+async def add_video_to_list():
+    try:
+
+        index_file_path = Path("listAddManually.html")
+
+        if index_file_path.exists():
+            content = index_file_path.read_text(encoding='utf-8')
+            # logging.debug(f"File content: {content}")
+            return HTMLResponse(content=content, status_code=200)
+            # logging.debug(f"Index file found at {index_file_path}")
+            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
+        else:
+            logging.error(f"Index file not found at {index_file_path}")
+            raise HTTPException(status_code=404, detail="Index file not found")
+
+    except Exception as e:
+        logging.exception(
+            f"An error occurred while reading the index file {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 # Why `put` instead of `post`?
