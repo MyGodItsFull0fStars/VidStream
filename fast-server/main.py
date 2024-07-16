@@ -46,6 +46,7 @@ video_db: list[Video] = []
 @app.put("/download")
 async def download_video_via_url(video: URL):
     # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
+    # TODO fix error 405
     try:
         output_path = os.path.join(os.getcwd, 'downloads')
         if not os.path.exists(output_path):
