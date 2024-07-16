@@ -18,6 +18,11 @@ if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
 
 video_db: list[Video] = []
+for video in os.listdir('downloads/'):
+    if video.endswith('.mp4'):
+        video_db.append(video)
+    elif video.endswith('.webm'):
+        video_db.append(video)    
 
 
 def url_check(url):
@@ -37,14 +42,13 @@ def url_check(url):
 # TODO 3. Add proper starting page [done]
 # TODO 4. Download YT video via REST PUT call [done]
 # TODO 5. download.html for REST GET request [done / also improved index.html]
-# TODO 6. add all exising videos to video_db
+# TODO 6. add all exising videos to video_db [done]
 # TODO 7. list all existing videos via REST call
 
 
 @app.put("/download")
 async def download_video_via_url(video: URL):
     # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
-    # TODO fix error 405
     try:
 
         background_command = [
