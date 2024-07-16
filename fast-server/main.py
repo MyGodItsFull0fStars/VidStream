@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import logging
 import os
 import subprocess
-import validators
+
 
 
 
