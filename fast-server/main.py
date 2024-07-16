@@ -36,7 +36,7 @@ def url_check(url):
 # TODO 2. Try out yt-dlp [done]
 # TODO 3. Add proper starting page [done]
 # TODO 4. Download YT video via REST PUT call [done]
-# TODO 5. download.html for REST GET request
+# TODO 5. download.html for REST GET request [done / also improved index.html]
 # TODO 6. add all exising videos to video_db
 # TODO 7. list all existing videos via REST call
 
