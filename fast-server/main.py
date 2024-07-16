@@ -58,6 +58,28 @@ async def download_video_via_url(video: URL):
 
     except subprocess.CalledProcessError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    
+
+@app.get("/download")
+async def download_video():
+    try:
+
+        index_file_path = Path("download.html")
+
+        if index_file_path.exists():
+            content = index_file_path.read_text(encoding='utf-8')
+            # logging.debug(f"File content: {content}")
+            return HTMLResponse(content=content, status_code=200)
+            # logging.debug(f"Index file found at {index_file_path}")
+            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
+        else:
+            logging.error(f"Index file not found at {index_file_path}")
+            raise HTTPException(status_code=404, detail="Index file not found")
+
+    except Exception as e:
+        logging.exception(
+            f"An error occurred while reading the index file {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @app.get("/")
