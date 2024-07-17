@@ -22,6 +22,7 @@ class URL(BaseModel):
         if v is None or len(v) == 0:
             raise ValueError('empty url')
 
+        # returns a match object if the pattern matches and None if the pattern doesn't match
         if re.match(url_pattern, v) is None:
             raise ValueError('invalid url pattern')
 
