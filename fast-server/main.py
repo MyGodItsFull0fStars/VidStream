@@ -43,15 +43,6 @@ def url_check(url):  # TODO replace with FastAPI/Pydantic validator
         return False
 
 
-# TODO 1. Install Python dependencies (pydantic, yt-dlp) [done]
-# TODO 2. Try out yt-dlp [done]
-# TODO 3. Add proper starting page [done]
-# TODO 4. Download YT video via REST PUT call [done]
-# TODO 5. download.html for REST GET request [done / also improved index.html]
-# TODO 6. add all exising videos to video_db [done]
-# TODO 7. list all existing videos via REST call
-
-
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
     try:
