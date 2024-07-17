@@ -1,9 +1,5 @@
 # Tasks
 
-## Week 1
-
-## Week 2
-
 1. Install Python dependencies (pydantic, yt-dlp) [done]
 2. Try out yt-dlp [done]
 3. Add proper starting page [done]
