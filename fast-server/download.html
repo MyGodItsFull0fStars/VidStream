@@ -76,12 +76,12 @@
     document.getElementById('submit-button').addEventListener('click', async function() {
       const textValue = document.getElementById('text').value;
 
-      const response = await fetch('http://127.0.0.1:8000/submit', {
-        method: 'POST',
+      const response = await fetch('http://127.0.0.1:8000/download', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: textValue })
+        body: JSON.stringify({ "url": textValue })
       });
 
       const result = await response.json();
