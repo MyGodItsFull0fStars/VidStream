@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from urllib.parse import urlparse
@@ -12,6 +13,13 @@ from video_utility.model import URL, Video
 logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],  
+    allow_credentials = True,
+    allow_methods=['*'],  
+    allow_headers=['*']   
+)
 
 # TODO add HTML static page paths here [done]
 # TODO validate paths (similar to what is already done within REST methods) [done]
@@ -106,6 +114,13 @@ async def video_list() -> HTMLResponse:
 @ app.get("/add")
 async def add_video() -> HTMLResponse:
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=200)
+
+@app.post("/submit")
+async def submit(request: Request):
+    data = await request.json()
+    text_value = data.get("text")
+    print(f"Received text: {text_value}")
+    return {"message": "Text received", "text": text_value}
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
