@@ -16,13 +16,19 @@ app = FastAPI()
 # TODO add HTML static page paths here
 # TODO validate paths (similar to what is already done within REST methods)
 
+DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
+DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert DOWNLOAD_HTML_FILE_PATH.exists(), 'index.html not found'
+
 OUTPUT_PATH: str = os.path.join(os.getcwd(), 'downloads')
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
 
 assert len(OUTPUT_PATH) > 0, 'invalid output path'
 
-video_db: list[Video] = []
+video_db: list[Video] = []  # TODO fill with existing videos
+
 
 for video in os.listdir('downloads/'):
     if video.endswith('.mp4'):
@@ -62,21 +68,7 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 
 @app.get("/download")
 async def download_video() -> HTMLResponse:
-    try:
-
-        index_file_path = Path("download.html")  # TODO move up
-
-        if index_file_path.exists():
-            content = index_file_path.read_text(encoding='utf-8')
-            return HTMLResponse(content=content, status_code=200)
-        else:
-            logging.error(f"Index file not found at {index_file_path}")
-            raise HTTPException(status_code=404, detail="Index file not found")
-
-    except Exception as e:
-        logging.exception(
-            f"An error occurred while reading the index file {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=200)
 
 
 @app.get("/")
@@ -103,6 +95,11 @@ async def read_root() -> HTMLResponse:
 async def video_list():
     try:
         index_file_path = Path('list.html')  # TODO move up
+
+        # TODO fill with video_db values
+        video_dict: dict[str, str] = {
+            # key (name): value (path)
+        }
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
