@@ -19,13 +19,28 @@ app = FastAPI()
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
     encoding='utf-8')
-assert DOWNLOAD_HTML_FILE_PATH.exists(), 'index.html not found'
+assert DOWNLOAD_HTML_FILE_PATH.exists(), 'download.html not found'
 
 OUTPUT_PATH: str = os.path.join(os.getcwd(), 'downloads')
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
 
 assert len(OUTPUT_PATH) > 0, 'invalid output path'
+
+INDEX_HTML_FILE_PATH: Path = Path("index.html")
+INDEX_HTML_FILE_CONTENT: Path = INDEX_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert INDEX_HTML_FILE_PATH.exists(), 'index.html not found'
+
+LIST_HTML_FILE_PATH: Path = Path("list.html")
+LIST_HTML_FILE_CONTENT: Path = LIST_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert LIST_HTML_FILE_PATH.exists(), 'list.html not found'
+
+ADD_HTML_FILE_PATH: Path = Path("listAddManually.html")
+ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
 video_db: list[Video] = []  # TODO fill with existing videos
 
@@ -37,7 +52,7 @@ for video in os.listdir('downloads/'):
         video_db.append(video)
 
 
-def url_check(url):  # TODO replace with FastAPI/Pydantic validator
+def url_check(url):  
     try:
         result = urlparse(url)
 
@@ -114,7 +129,7 @@ async def video_list():
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-@ app.get("/listAddManually")
+@ app.get("/add")
 async def add_video_to_list():
     try:
 
