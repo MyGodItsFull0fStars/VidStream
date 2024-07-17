@@ -13,9 +13,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
+# TODO add HTML static page paths here
+# TODO validate paths (similar to what is already done within REST methods)
+
 OUTPUT_PATH: str = os.path.join(os.getcwd(), 'downloads')
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
+
+assert len(OUTPUT_PATH) > 0, 'invalid output path'
 
 video_db: list[Video] = []
 
@@ -26,7 +31,7 @@ for video in os.listdir('downloads/'):
         video_db.append(video)
 
 
-def url_check(url):
+def url_check(url):  # TODO replace with FastAPI/Pydantic validator
     try:
         result = urlparse(url)
 
@@ -68,7 +73,7 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 async def download_video() -> HTMLResponse:
     try:
 
-        index_file_path = Path("download.html")
+        index_file_path = Path("download.html")  # TODO move up
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
@@ -87,7 +92,7 @@ async def download_video() -> HTMLResponse:
 async def read_root() -> HTMLResponse:
     try:
 
-        index_file_path = Path("index.html")
+        index_file_path = Path("index.html")  # TODO move up
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
@@ -106,7 +111,7 @@ async def read_root() -> HTMLResponse:
 @ app.get('/list')
 async def video_list():
     try:
-        index_file_path = Path('list.html')
+        index_file_path = Path('list.html')  # TODO move up
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
@@ -125,7 +130,7 @@ async def video_list():
 async def add_video_to_list():
     try:
 
-        index_file_path = Path("listAddManually.html")
+        index_file_path = Path("listAddManually.html")  # TODO move up
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
