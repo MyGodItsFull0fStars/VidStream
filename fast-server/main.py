@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
-# TODO add HTML static page paths here
-# TODO validate paths (similar to what is already done within REST methods)
+# TODO add HTML static page paths here [done]
+# TODO validate paths (similar to what is already done within REST methods) [done]
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
@@ -42,13 +42,18 @@ ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
     encoding='utf-8')
 assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
-video_db: list[Video] = []  # TODO fill with existing videos
 
 
-for video in os.listdir('downloads/'):
-    if video.endswith('.mp4'):
-        video_db.append(video)
-    elif video.endswith('.webm'):
+
+        
+def __init__(self, file_path):
+    self.file_path = file_path
+       
+video_db: list[Video] = []
+
+for video_file in os.listdir('downloads/'):
+    if video_file.endswith('.mp4') or video_file.endswith('.webm'):
+        video = Video(file_path=os.path.join('downloads', video_file))
         video_db.append(video)
 
 
