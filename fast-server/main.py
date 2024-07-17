@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from urllib.parse import urlparse
@@ -43,12 +43,10 @@ ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
 assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
 
-
-
-        
 def __init__(self, file_path):
     self.file_path = file_path
-       
+
+
 video_db: list[Video] = []
 
 for video_file in os.listdir('downloads/'):
@@ -57,7 +55,7 @@ for video_file in os.listdir('downloads/'):
         video_db.append(video)
 
 
-def url_check(url):  
+def url_check(url):
     try:
         result = urlparse(url)
 
@@ -68,19 +66,20 @@ def url_check(url):
     except:
         return False
 
+
 @app.get("/download")
 async def download_video() -> HTMLResponse:
-    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=200)
+    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
 
 
 @app.get("/")
 async def read_root() -> HTMLResponse:
-    return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=200)
+    return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @ app.get('/list')
 async def video_list() -> HTMLResponse:
-    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=200)
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
     # try:
     #     index_file_path = Path('list.html')  # TODO move up
@@ -107,6 +106,7 @@ async def video_list() -> HTMLResponse:
 async def add_video() -> HTMLResponse:
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=200)
 
+
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
     try:
@@ -122,5 +122,3 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 
     except subprocess.CalledProcessError as error:
         raise HTTPException(status_code=400, detail=str(error))
-
-
