@@ -68,6 +68,44 @@ def url_check(url):
     except:
         return False
 
+@app.get("/download")
+async def download_video() -> HTMLResponse:
+    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=200)
+
+
+@app.get("/")
+async def read_root() -> HTMLResponse:
+    return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=200)
+
+
+@ app.get('/list')
+async def video_list() -> HTMLResponse:
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=200)
+
+    # try:
+    #     index_file_path = Path('list.html')  # TODO move up
+
+    #     # TODO fill with video_db values
+    #     video_dict: dict[str, str] = {
+    #         # key (name): value (path)
+    #     }
+
+    #     if index_file_path.exists():
+    #         content = index_file_path.read_text(encoding='utf-8')
+    #         return HTMLResponse(content=content, status_code=200)
+    #     else:
+    #         logging.error(f"Index file not found at {index_file_path}")
+    #         raise HTTPException(status_code=404, detail="Index file not found")
+
+    # except Exception as e:
+    #     logging.exception(
+    #         f"An error occurred while reading the index file {e}")
+    #     raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+@ app.get("/add")
+async def add_video() -> HTMLResponse:
+    return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=200)
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
@@ -86,68 +124,3 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
         raise HTTPException(status_code=400, detail=str(error))
 
 
-@app.get("/download")
-async def download_video() -> HTMLResponse:
-    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=200)
-
-
-@app.get("/")
-async def read_root() -> HTMLResponse:
-    try:
-
-        index_file_path = Path("index.html")  # TODO move up
-
-        if index_file_path.exists():
-            content = index_file_path.read_text(encoding='utf-8')
-            return HTMLResponse(content=content, status_code=200)
-
-        else:
-            logging.error(f"Index file not found at {index_file_path}")
-            raise HTTPException(status_code=404, detail="Index file not found")
-
-    except Exception as e:
-        logging.exception(
-            f"An error occurred while reading the index file {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
-
-
-@ app.get('/list')
-async def video_list():
-    try:
-        index_file_path = Path('list.html')  # TODO move up
-
-        # TODO fill with video_db values
-        video_dict: dict[str, str] = {
-            # key (name): value (path)
-        }
-
-        if index_file_path.exists():
-            content = index_file_path.read_text(encoding='utf-8')
-            return HTMLResponse(content=content, status_code=200)
-        else:
-            logging.error(f"Index file not found at {index_file_path}")
-            raise HTTPException(status_code=404, detail="Index file not found")
-
-    except Exception as e:
-        logging.exception(
-            f"An error occurred while reading the index file {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
-
-
-@ app.get("/add")
-async def add_video_to_list():
-    try:
-
-        index_file_path = Path("listAddManually.html")  # TODO move up
-
-        if index_file_path.exists():
-            content = index_file_path.read_text(encoding='utf-8')
-            return HTMLResponse(content=content, status_code=200)
-        else:
-            logging.error(f"Index file not found at {index_file_path}")
-            raise HTTPException(status_code=404, detail="Index file not found")
-
-    except Exception as e:
-        logging.exception(
-            f"An error occurred while reading the index file {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
