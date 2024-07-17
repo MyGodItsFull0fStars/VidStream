@@ -49,7 +49,6 @@ def url_check(url):
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
-    # TODO add code to run yt-dlp "url" so the video will be downloadet automatically
     try:
 
         background_command = [
@@ -73,10 +72,7 @@ async def download_video() -> HTMLResponse:
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
-            # logging.debug(f"File content: {content}")
             return HTMLResponse(content=content, status_code=200)
-            # logging.debug(f"Index file found at {index_file_path}")
-            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
         else:
             logging.error(f"Index file not found at {index_file_path}")
             raise HTTPException(status_code=404, detail="Index file not found")
@@ -89,17 +85,14 @@ async def download_video() -> HTMLResponse:
 
 @app.get("/")
 async def read_root() -> HTMLResponse:
-    # TODO return proper starting page [done]
     try:
 
         index_file_path = Path("index.html")
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
-            # logging.debug(f"File content: {content}")
             return HTMLResponse(content=content, status_code=200)
-            # logging.debug(f"Index file found at {index_file_path}")
-            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
+
         else:
             logging.error(f"Index file not found at {index_file_path}")
             raise HTTPException(status_code=404, detail="Index file not found")
@@ -109,17 +102,8 @@ async def read_root() -> HTMLResponse:
             f"An error occurred while reading the index file {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-#    index_file_path = Path("/mnt/c/Users/Luka/IdeaProjects/untitled1/media-server-client/fast-server/index.html")
-#    if index_file_path.exists():
-#        return HTMLResponse(content=index_file_path.read_text(), status_code=200)
 
-
-#@app.get("/list")
-#async def get_video_list() -> list[Video]:
-#    # TODO convert list to dictionary
-#    return video_db
-
-@app.get('/list')
+@ app.get('/list')
 async def video_list():
     try:
         index_file_path = Path('list.html')
@@ -130,14 +114,14 @@ async def video_list():
         else:
             logging.error(f"Index file not found at {index_file_path}")
             raise HTTPException(status_code=404, detail="Index file not found")
-        
+
     except Exception as e:
         logging.exception(
             f"An error occurred while reading the index file {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
-        
 
-@app.get("/listAddManually")
+
+@ app.get("/listAddManually")
 async def add_video_to_list():
     try:
 
@@ -145,10 +129,7 @@ async def add_video_to_list():
 
         if index_file_path.exists():
             content = index_file_path.read_text(encoding='utf-8')
-            # logging.debug(f"File content: {content}")
             return HTMLResponse(content=content, status_code=200)
-            # logging.debug(f"Index file found at {index_file_path}")
-            # return HTMLResponse(content=index_file_path.read_text(), status_code=200)
         else:
             logging.error(f"Index file not found at {index_file_path}")
             raise HTTPException(status_code=404, detail="Index file not found")
@@ -157,26 +138,3 @@ async def add_video_to_list():
         logging.exception(
             f"An error occurred while reading the index file {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
-
-
-# Why `put` instead of `post`?
-# See: https://restfulapi.net/rest-put-vs-post/
-# @app.put('/videos/download_video')
-# async def download_video(video: Video) -> Video:
-#    """Downloads the video onto the server for later retrieval
-#
-#    Parameters
-#    ----------
-#
-#
-#    Returns
-#    -------
-#    JSON
-#        Returns a description of the success and infos of the downloaded video
-#    """
-#    # TODO validate URL (for later) [done]
-#    # TODO download video using yt-dlp
-#    # TODO return meaningful response, handle errors too!
-#
-#    # download_video_from_url(...)
-#    return video
