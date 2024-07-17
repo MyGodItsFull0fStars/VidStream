@@ -51,28 +51,12 @@ ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
 assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
 
-def __init__(self, file_path):
-    self.file_path = file_path
-
-
 video_db: list[Video] = []
 
 for video_file in os.listdir('downloads/'):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
-        video = Video(file_path=os.path.join('downloads', video_file))
+        video = Video(name=video_file, path=os.path.join('downloads', video_file))
         video_db.append(video)
-
-
-def url_check(url):
-    try:
-        result = urlparse(url)
-
-        if all([result.scheme, result.netloc]):
-            return True
-        else:
-            return False
-    except:
-        return False
 
 
 @app.get("/download")
@@ -88,26 +72,6 @@ async def read_root() -> HTMLResponse:
 @ app.get('/list')
 async def video_list() -> HTMLResponse:
     return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
-
-    # try:
-    #     index_file_path = Path('list.html')  # TODO move up
-
-    #     # TODO fill with video_db values
-    #     video_dict: dict[str, str] = {
-    #         # key (name): value (path)
-    #     }
-
-    #     if index_file_path.exists():
-    #         content = index_file_path.read_text(encoding='utf-8')
-    #         return HTMLResponse(content=content, status_code=200)
-    #     else:
-    #         logging.error(f"Index file not found at {index_file_path}")
-    #         raise HTTPException(status_code=404, detail="Index file not found")
-
-    # except Exception as e:
-    #     logging.exception(
-    #         f"An error occurred while reading the index file {e}")
-    #     raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @ app.get("/add")
@@ -136,3 +100,5 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 
     except subprocess.CalledProcessError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    
+    
