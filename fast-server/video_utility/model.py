@@ -3,7 +3,7 @@ from pydantic import BaseModel, field_validator
 import re
 
 # Validate URL
-url_pattern = "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$"
+URL_PATTERN = "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$"
 
 
 class URL(BaseModel):
@@ -23,7 +23,7 @@ class URL(BaseModel):
             raise ValueError('empty url')
 
         # returns a match object if the pattern matches and None if the pattern doesn't match
-        if re.match(url_pattern, v) is None:
+        if re.match(URL_PATTERN, v) is None:
             raise ValueError('invalid url pattern')
 
         return v
@@ -40,6 +40,8 @@ class Video(BaseModel):
 
     name: str
     path: str
+
+    # TODO add validator for name and path
 
 
 if __name__ == '__main__':
