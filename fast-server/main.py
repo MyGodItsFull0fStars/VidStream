@@ -9,6 +9,9 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
 
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from video_utility.model import URL, Video
 
@@ -22,6 +25,8 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+app.mount('/static', StaticFiles(directory='static'), name='static')
+
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
@@ -58,7 +63,7 @@ VIDEO_DIR = 'downloads'
 #     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
 #         video = Video(name=video_file, path=os.path.join('downloads', video_file))
 #         video_db.append(video)
-        
+
 # def download_simulation(file_name: str):
 #     global PROGRESS
 #     total_steps = 10
@@ -86,6 +91,7 @@ async def get_video(video_name: str):
     video_path = os.path.join(VIDEO_DIR, video_name)
     return FileResponse(video_path)
 
+
 @app.get('/list/a')
 async def list_videos():
     videos = [f for f in os.listdir(VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
@@ -94,10 +100,14 @@ async def list_videos():
         Video(name=v_name[i], path=videos[i]) for i in range(len(videos))
     ]
     #return {"videos": videos}, HTMLResponse (content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+    videos = [f for f in os.listdir(
+        VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+    return {"videos": videos}, HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+
 
 @ app.get('/list')
 async def video_list() -> HTMLResponse:
-     return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @ app.get("/add")
@@ -126,6 +136,8 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
     except subprocess.CalledProcessError as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
     
+        raise HTTPException(status_code=400, detail=str(error))
+
 # @app.post("/download")
 # async def start_download(background_tasks: BackgroundTasks):
 #     background_tasks.add_task(download_simulation, "dummy_video.mp4")
@@ -139,7 +151,7 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 #             if lines:
 #                 return {"progress": float(lines[-1])}
 #     return {"progress": 0}
-    
+
 
 # @app.post("/download")
 # async def start_download(background_tasks: BackgroundTasks):
@@ -153,6 +165,9 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 #     return {"progress": PROGRESS}
     
         
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
 # @ app.get('/list')
