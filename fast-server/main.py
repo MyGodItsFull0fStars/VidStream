@@ -2,10 +2,12 @@ from pathlib import Path
 import logging
 import os
 import subprocess
+
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from video_utility.model import URL, Video
 
@@ -19,6 +21,8 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+app.mount('/static', StaticFiles(directory='static'), name='static')
+
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
