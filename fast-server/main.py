@@ -1,11 +1,10 @@
-from fastapi import FastAPI, HTTPException, Request, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
 from pathlib import Path
-from urllib.parse import urlparse
 import logging
 import os
 import subprocess
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 
 from video_utility.model import URL, Video
@@ -15,14 +14,11 @@ logging.basicConfig(level=logging.DEBUG)
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],  
-    allow_credentials = True,
-    allow_methods=['*'],  
-    allow_headers=['*']   
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
 )
-
-# TODO add HTML static page paths here [done]
-# TODO validate paths (similar to what is already done within REST methods) [done]
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
@@ -55,13 +51,9 @@ video_db: list[Video] = []
 
 for video_file in os.listdir('downloads/'):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
-        video = Video(name=video_file, path=os.path.join('downloads', video_file))
+        video = Video(name=video_file, path=os.path.join(
+            'downloads', video_file))
         video_db.append(video)
-
-
-@app.get("/download")
-async def download_video() -> HTMLResponse:
-    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
 
 
 @app.get("/")
@@ -69,21 +61,15 @@ async def read_root() -> HTMLResponse:
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
-@ app.get('/list')
-async def video_list() -> HTMLResponse:
-    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
-
-
 @ app.get("/add")
 async def add_video() -> HTMLResponse:
-    return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=200)
+    return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
-@app.post("/submit")
-async def submit(request: Request):
-    data = await request.json()
-    text_value = data.get("text")
-    print(f"Received text: {text_value}")
-    return {"message": "Text received", "text": text_value}
+
+@app.get("/download")
+async def download_video() -> HTMLResponse:
+    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
+
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
@@ -96,9 +82,25 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
         ]
         subprocess.run(background_command, check=True)
 
-        return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=201)
+        return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=status.HTTP_201_CREATED)
 
     except subprocess.CalledProcessError as error:
-        raise HTTPException(status_code=400, detail=str(error))
-    
-    
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+
+
+@ app.get('/list')
+async def video_list() -> HTMLResponse:
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+
+
+@app.post("/submit")
+async def submit(request: Request) -> HTMLResponse:
+    data = await request.json()
+    text_value = data.get("text")
+    print(f"Received text: {text_value}")
+
+    return HTMLResponse(
+        content={"message": "Text received", "text": text_value},
+        status_code=status.HTTP_201_CREATED
+    )
