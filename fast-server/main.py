@@ -8,8 +8,6 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
-
-from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -28,8 +26,7 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="static/templates")
-
+templates: Jinja2Templates = Jinja2Templates(directory="static/templates")
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
 DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
@@ -101,7 +98,9 @@ async def read_item(request: Request):
 async def list_videos_template(request: Request) -> _TemplateResponse:
 
     return templates.TemplateResponse(
-        request=request, name="video_list.html", context={"videos": video_db}
+        request=request,
+        name="video_list.html",
+        context={"videos": video_db}
     )
 
 
@@ -113,15 +112,16 @@ async def get_video(video_name: str):
 
 @app.get('/list/a')
 async def list_videos():
-    videos = [f for f in os.listdir(VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+    videos = [f for f in os.listdir(
+        VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
     v_name = [f.split('.')[0] for f in videos]
     return [
         Video(name=v_name[i], path=videos[i]) for i in range(len(videos))
     ]
-    #return {"videos": videos}, HTMLResponse (content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
-    videos = [f for f in os.listdir(
-        VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
-    return {"videos": videos}, HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+    # return {"videos": videos}, HTMLResponse (content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+    # videos = [f for f in os.listdir(
+    #     VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+    # return {"videos": videos}, HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @ app.get('/list')
@@ -153,9 +153,10 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
         return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=status.HTTP_201_CREATED)
 
     except subprocess.CalledProcessError as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
-    
-        raise HTTPException(status_code=400, detail=str(error))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+
+        # raise HTTPException(status_code=400, detail=str(error))
 
 # @app.post("/download")
 # async def start_download(background_tasks: BackgroundTasks):
@@ -182,8 +183,6 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 # @app.get("/progress")
 # async def get_progress():
 #     return {"progress": PROGRESS}
-    
-        
 
         # raise HTTPException(
         #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
