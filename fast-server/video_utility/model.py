@@ -43,6 +43,12 @@ class Video(BaseModel):
 
     # TODO add validator for name and path
 
+    def __str__(self) -> str:
+        return f'''Video\n\tname:{self.name}\n\tpath:{self.path}'''
+
+    def __repr__(self) -> str:
+        return f'''Video\n\tname:{self.name}\n\tpath:{self.path}'''
+
 
 if __name__ == '__main__':
     # if it crashes, there is something with the URL validation

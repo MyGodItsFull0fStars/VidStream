@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Item Details</title>
+    <!-- TODO add style sheet -->
+    <!-- <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet"> -->
+</head>
+<body>
+    <h1>
+        <!-- reference to the REST method in main.py -->
+        <ul id="{{ url_for('list_videos_template') }}">
+        <!-- for loop iterating over the dictionary -->
+        {% for video in videos %}
+        <li>
+            <a href="{{ video.path }}">
+                {{ video.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul></h1>
+</body>
+</html>

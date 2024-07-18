@@ -13,6 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from starlette.templating import _TemplateResponse
 from video_utility.model import URL, Video
 
 logging.basicConfig(level=logging.DEBUG)
@@ -25,7 +26,9 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
-app.mount('/static', StaticFiles(directory='static'), name='static')
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="static/templates")
 
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("download.html")
@@ -84,6 +87,22 @@ for video_file in os.listdir('downloads/'):
 @app.get("/")
 async def read_root() -> HTMLResponse:
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+
+
+@app.get("/items/", response_class=HTMLResponse)
+async def read_item(request: Request):
+    # id = 'test'
+    return templates.TemplateResponse(
+        request=request, name="aaa.html", context={"id": len(video_db)}
+    )
+
+
+@app.get("/videos/list", response_class=HTMLResponse)
+async def list_videos_template(request: Request) -> _TemplateResponse:
+
+    return templates.TemplateResponse(
+        request=request, name="video_list.html", context={"videos": video_db}
+    )
 
 
 @app.get("/videos/{video_name}")
@@ -156,13 +175,13 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 # async def get_progress():
 #     return {"progress": PROGRESS}
 
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+        # raise HTTPException(
+        #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
-@ app.get('/list')
-async def video_list() -> HTMLResponse:
-    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+# @ app.get('/list')
+# async def video_list() -> HTMLResponse:
+#     return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @app.post("/submit")
