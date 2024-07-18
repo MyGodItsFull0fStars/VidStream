@@ -75,12 +75,6 @@
   </div>
 
   <script>
-    const videos = [
-      { title: 'Bsp. Vid 1', description: 'Beispiel für Video 1', url: '' },
-      { title: 'Bsp. Vid 2', description: 'Beispiel für Video 2', url: '' },
-      { title: 'Bsp. Vid 3', description: 'Beispiel für Video 3', url: '' }
-    ];
-
     document.getElementById('mode-switch').addEventListener('change', function() {
       if (this.checked) {
         document.body.classList.remove('light-mode');
@@ -91,23 +85,50 @@
       }
     });
 
-    function loadVideos() {
+    async function fetchVideos() {
+      const response = await fetch('http://127.0.0.1:8000/list');
+      const data = await response.json();
       const videoList = document.getElementById('video-list');
-      videos.forEach(video => {
-        const li = document.createElement('li');
-        li.classList.add('collection-item', 'video-item');
-        
-        li.innerHTML = `
-          <div class="info">
-            <h5>${video.title}</h5>
-            <p>${video.description}</p>
-          </div>
-          <a href="${video.url}" class="btn-small waves-effect waves-light play-button" target="_blank">Play</a>
+      videoList.innerHTML = '';
+      data.videos.forEach(video => {
+        const videoItem = document.createElement('div');
+        videoItem.className = 'video-item';
+        videoItem.innerHTML = `
+          <span>${video}</span>
+          <button class="btn" onclick="playVideo('${video}')">Play</button>
         `;
-        
-        videoList.appendChild(li);
+        videoList.appendChild(videoItem);
       });
     }
+
+    function playVideo(video) {
+      const videoPlayer = document.getElementById('video-player');
+      const videoSource = document.getElementById('video-source');
+      videoSource.src = `http://127.0.0.1:8000/videos/${video}`;
+      videoPlayer.style.display = 'block';
+      videoPlayer.load();
+      videoPlayer.play();
+    }
+
+    fetchVideos();
+
+    function loadVideos() {
+       const videoList = document.getElementById('video-list');
+       videos.forEach(video => {
+         const li = document.createElement('li');
+         li.classList.add('collection-item', 'video-item');
+        
+         li.innerHTML = `
+           <div class="info">
+             <h5>${video.title}</h5>
+             <p>${video.description}</p>
+           </div>
+           <a href="${video.url}" class="btn-small waves-effect waves-light play-button" target="_blank">Play</a>
+         `;
+        
+         videoList.appendChild(li);
+       });
+     }
 
     document.addEventListener('DOMContentLoaded', loadVideos);
   </script>
