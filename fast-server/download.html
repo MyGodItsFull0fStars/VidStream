@@ -73,6 +73,55 @@
       }
     });
 
+    async function fetchVideos() {
+      const response = await fetch('http://127.0.0.1:8000/list');
+      const data = await response.json();
+      const videoList = document.getElementById('video-list');
+      videoList.innerHTML = '';
+      data.videos.forEach(video => {
+        const videoItem = document.createElement('div');
+        videoItem.className = 'video-item';
+        videoItem.innerHTML = `
+          <span>${video}</span>
+          <button class="btn" onclick="playVideo('${video}')">Play</button>
+        `;
+        videoList.appendChild(videoItem);
+      });
+    }
+
+    function playVideo(video) {
+      const videoPlayer = document.getElementById('video-player');
+      const videoSource = document.getElementById('video-source');
+      videoSource.src = `http://127.0.0.1:8000/videos/${video}`;
+      videoPlayer.style.display = 'block';
+      videoPlayer.load();
+      videoPlayer.play();
+    }
+
+    async function startDownload() {
+      document.getElementById('progress-bar').style.display = 'block';
+      const response = await fetch('http://127.0.0.1:8000/download', {
+        method: 'POST',
+      });
+      if (response.ok) {
+        checkProgress();
+      }
+    }
+
+    async function checkProgress() {
+      const response = await fetch('http://127.0.0.1:8000/progress');
+      const data = await response.json();
+      const progressBar = document.getElementById('progress');
+      progressBar.style.width = `${data.progress}%`;
+      if (data.progress < 100) {
+        setTimeout(checkProgress, 1000);
+      } else {
+        alert('Download complete');
+      }
+    }
+
+    fetchVideos();
+
     document.getElementById('submit-button').addEventListener('click', async function() {
       const textValue = document.getElementById('text').value;
 

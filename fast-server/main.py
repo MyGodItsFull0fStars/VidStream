@@ -1,8 +1,12 @@
+from fastapi import FastAPI, HTTPException, Request, status, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pathlib import Path
 import logging
 import os
 import subprocess
-
+import time
+import shutil
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -52,7 +56,24 @@ assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
 
 video_db: list[Video] = []
+VIDEO_DIR = 'downloads'
+# PROGRESS_FILE = "progress.txt"
 
+# for video_file in os.listdir('downloads/'):
+#     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
+#         video = Video(name=video_file, path=os.path.join('downloads', video_file))
+#         video_db.append(video)
+
+# def download_simulation(file_name: str):
+#     global PROGRESS
+#     total_steps = 10
+#     for step in range(total_steps):
+#         PROGRESS = (step + 1) / total_steps * 100
+#         time.sleep(1)  # Simulate time taken for downloading each chunk
+#     # Simulate moving the file to the video directory
+#     os.makedirs(VIDEO_DIR, exist_ok=True)
+#     shutil.copy(file_name, os.path.join(VIDEO_DIR, os.path.basename(file_name)))
+#     PROGRESS = 100
 for video_file in os.listdir('downloads/'):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
         video = Video(name=video_file, path=os.path.join(
@@ -63,6 +84,24 @@ for video_file in os.listdir('downloads/'):
 @app.get("/")
 async def read_root() -> HTMLResponse:
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+
+
+@app.get("/videos/{video_name}")
+async def get_video(video_name: str):
+    video_path = os.path.join(VIDEO_DIR, video_name)
+    return FileResponse(video_path)
+
+
+@app.get('/list/a')
+async def list_videos():
+    videos = [f for f in os.listdir(
+        VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+    return {"videos": videos}, HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+
+
+@ app.get('/list')
+async def video_list() -> HTMLResponse:
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @ app.get("/add")
@@ -89,6 +128,34 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
         return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=status.HTTP_201_CREATED)
 
     except subprocess.CalledProcessError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+
+# @app.post("/download")
+# async def start_download(background_tasks: BackgroundTasks):
+#     background_tasks.add_task(download_simulation, "dummy_video.mp4")
+#     return {"message": "Download started"}
+
+# @app.get("/progress")
+# async def get_progress():
+#     if os.path.exists(PROGRESS_FILE):
+#         with open(PROGRESS_FILE, 'r') as f:
+#             lines = f.readlines()
+#             if lines:
+#                 return {"progress": float(lines[-1])}
+#     return {"progress": 0}
+
+
+# @app.post("/download")
+# async def start_download(background_tasks: BackgroundTasks):
+#     global PROGRESS
+#     PROGRESS = 0
+#     background_tasks.add_task(download_simulation, "dummy_video.mp4")
+#     return {"message": "Download started"}
+
+# @app.get("/progress")
+# async def get_progress():
+#     return {"progress": PROGRESS}
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
