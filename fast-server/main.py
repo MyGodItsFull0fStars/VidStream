@@ -1,8 +1,6 @@
 import logging
 import os
 import subprocess
-import time
-import shutil
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, status
@@ -59,8 +57,6 @@ video_db: list[Video] = []
 VIDEO_DIR = 'downloads'
 
 
-
-
 for video_file in os.listdir('downloads/'):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
         video = Video(name=video_file, path=os.path.join(
@@ -73,16 +69,29 @@ async def read_root() -> HTMLResponse:
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
-
-
-
-
 @app.get("/list", response_class=HTMLResponse)
-async def list_videos_template(request: Request) -> _TemplateResponse:
-    videos = [{"name": f.split('.')[0], "path": f"/videos/{f}"} for f in os.listdir(VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+async def list_videos_template(request: Request) -> HTMLResponse:
+    """Returns a HTML page listing all available videos
 
-    return templates.TemplateResponse(request=request, name="list.html", context={"request": request, "videos": videos})
+    Parameters
+    ----------
+    request : Request
+        HTTP request
 
+    Returns
+    -------
+    HTMLResponse
+        A HTML page consisting of available videos
+    """
+    videos = [{"name": f.split('.')[0], "path": f"/videos/{f}"}
+              for f in os.listdir(VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+
+    return templates.TemplateResponse(
+        request=request,
+        name="list.html",
+        context={"videos": videos},
+        status_code=status.HTTP_200_OK
+    )
 
 
 @app.get("/videos/{video_name}")
@@ -101,9 +110,6 @@ async def list_videos():
     ]
 
 
-
-
-
 @ app.get("/add")
 async def add_video() -> HTMLResponse:
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
@@ -111,6 +117,13 @@ async def add_video() -> HTMLResponse:
 
 @app.get("/download")
 async def download_video() -> HTMLResponse:
+    """Provides a HTML page where a video url text field is provided
+
+    Returns
+    -------
+    HTMLResponse
+        HTML page
+    """
     return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
 
 
@@ -189,8 +202,8 @@ async def submit(request: Request) -> HTMLResponse:
 # async def get_progress():
 #     return {"progress": PROGRESS}
 
-        # raise HTTPException(
-        #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    # raise HTTPException(
+    #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
 # @ app.get('/list')
