@@ -53,10 +53,10 @@ ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
 assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
 
 
-video_db: list[Video] = []
 VIDEO_DIR = 'downloads'
 
 
+video_db: list[Video] = []
 for video_file in os.listdir('downloads/'):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
         video = Video(name=video_file, path=os.path.join(
@@ -66,6 +66,13 @@ for video_file in os.listdir('downloads/'):
 
 @app.get("/")
 async def read_root() -> HTMLResponse:
+    """TODO _summary_
+
+    Returns
+    -------
+    HTMLResponse
+        _description_
+    """
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
@@ -95,23 +102,42 @@ async def list_videos_template(request: Request) -> HTMLResponse:
 
 
 @app.get("/videos/{video_name}")
-async def get_video(video_name: str):
+async def get_video(video_name: str) -> FileResponse:
+    """TODO _summary_
+
+    Parameters
+    ----------
+    video_name : str
+        _description_
+
+    Returns
+    -------
+    FileResponse
+        _description_
+    """
     video_path = os.path.join(VIDEO_DIR, video_name)
     return FileResponse(video_path)
 
 
-@app.get('/list/a')
-async def list_videos():
-    videos = [f for f in os.listdir(
-        VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
-    v_name = [f.split('.')[0] for f in videos]
-    return [
-        Video(name=v_name[i], path=videos[i]) for i in range(len(videos))
-    ]
+# @app.get('/list/a')
+# async def list_videos():
+#     videos = [f for f in os.listdir(
+#         VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+#     v_name = [f.split('.')[0] for f in videos]
+#     return [
+#         Video(name=v_name[i], path=videos[i]) for i in range(len(videos))
+#     ]
 
 
 @ app.get("/add")
 async def add_video() -> HTMLResponse:
+    """TODO _summary_ 
+
+    Returns
+    -------
+    HTMLResponse
+        _description_
+    """
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
@@ -129,8 +155,24 @@ async def download_video() -> HTMLResponse:
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
-    try:
+    """TODO _summary_
 
+    Parameters
+    ----------
+    url_model : URL
+        _description_
+
+    Returns
+    -------
+    HTMLResponse
+        _description_
+
+    Raises
+    ------
+    HTTPException
+        _description_
+    """
+    try:
         background_command = [
             'yt-dlp',
             '-o', os.path.join(OUTPUT_PATH, '%(title)s.%(ext)s'),
@@ -147,6 +189,7 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
         # raise HTTPException(status_code=400, detail=str(error))
 
 
+# TODO if is used in server, add docstring (as above) or comment out/remove
 @app.post("/submit")
 async def submit(request: Request) -> HTMLResponse:
     data = await request.json()
