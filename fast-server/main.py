@@ -1,3 +1,4 @@
+"""This module is the starting point of the `Media-Server` side"""
 import logging
 import os
 import subprocess
@@ -9,7 +10,6 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from starlette.templating import _TemplateResponse
 from video_utility.model import URL, Video
 
 logging.basicConfig(level=logging.DEBUG)
