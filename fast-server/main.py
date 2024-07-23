@@ -140,6 +140,24 @@ async def add_video() -> HTMLResponse:
     """
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
+# @app.get("/download", response_class=HTMLResponse)
+# async def download_video() -> HTMLResponse:
+#     """Provides a HTML page where a video url text field is provided"""
+#     return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
+
+# @app.put("/download")
+# async def download_via_url(url_model: URL) -> HTMLResponse:
+#     """Runs a background command that downloads the given video and puts it into the library"""
+#     try:
+#         background_command = [
+#             'yt-dlp',
+#             '-o', os.path.join('OUTPUT_PATH', '%(title)s.%(ext)s'),
+#             url_model.url,
+#         ]
+#         subprocess.run(background_command, check=True)
+#         return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=201)
+#     except subprocess.CalledProcessError as error:
+#         raise HTTPException(status_code=400, detail=str(error))
 
 @app.get("/download")
 async def download_video() -> HTMLResponse:
