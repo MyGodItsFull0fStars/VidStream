@@ -81,6 +81,12 @@
   </div>
 
   <script>
+            window.addEventListener("blur", () =>{
+      document.title = "Come Back :("
+    })
+    window.addEventListener("focus", () =>{
+      document.title = "Video List add manually"
+    })
     document.getElementById('mode-switch').addEventListener('change', function() {
       if (this.checked) {
         document.body.classList.remove('light-mode');
