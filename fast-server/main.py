@@ -66,12 +66,12 @@ for video_file in os.listdir('downloads/'):
 
 @app.get("/")
 async def read_root() -> HTMLResponse:
-    """TODO _summary_
+    """Homepage
 
     Returns
     -------
     HTMLResponse
-        _description_
+        A HTML Page consisting every important redirect 
     """
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
@@ -103,17 +103,17 @@ async def list_videos_template(request: Request) -> HTMLResponse:
 
 @app.get("/videos/{video_name}")
 async def get_video(video_name: str) -> FileResponse:
-    """TODO _summary_
+    """Checks the availabillity of a specific video 
 
     Parameters
     ----------
     video_name : str
-        _description_
+        File name of the wanted video
 
     Returns
     -------
     FileResponse
-        _description_
+        Returns the path, where the given video is located s
     """
     video_path = os.path.join(VIDEO_DIR, video_name)
     return FileResponse(video_path)
@@ -131,12 +131,12 @@ async def get_video(video_name: str) -> FileResponse:
 
 @ app.get("/add")
 async def add_video() -> HTMLResponse:
-    """TODO _summary_ 
+    """Add a video manually to the list
 
     Returns
     -------
     HTMLResponse
-        _description_
+        HTML page providing the tools, to add a video manually to the list
     """
     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
@@ -155,22 +155,22 @@ async def download_video() -> HTMLResponse:
 
 @app.put("/download")
 async def download_video_via_url(url_model: URL) -> HTMLResponse:
-    """TODO _summary_
+    """Runs a background command that downloads the given video and puts it into the library 
 
     Parameters
     ----------
     url_model : URL
-        _description_
+        gets the URL, that was given in the textflied in download.html 
 
     Returns
     -------
     HTMLResponse
-        _description_
+        returns massage in terminal if video was downloadet successfully
 
     Raises
     ------
     HTTPException
-        _description_
+        if something goes wrong, raise error 
     """
     try:
         background_command = [
