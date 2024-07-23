@@ -27,44 +27,52 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates: Jinja2Templates = Jinja2Templates(directory="static/templates")
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("static/templates/download.html")
-DOWNLOAD_HTML_FILE_CONTENT: Path = DOWNLOAD_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
 assert DOWNLOAD_HTML_FILE_PATH.exists(), 'download.html not found'
+DOWNLOAD_HTML_FILE_CONTENT: str = DOWNLOAD_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert len(
+    DOWNLOAD_HTML_FILE_CONTENT) > 0, 'download.html content could not be loaded'
 
 OUTPUT_PATH: str = os.path.join(os.getcwd(), 'downloads')
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
-
 assert len(OUTPUT_PATH) > 0, 'invalid output path'
 
 INDEX_HTML_FILE_PATH: Path = Path("static/templates/index.html")
-INDEX_HTML_FILE_CONTENT: Path = INDEX_HTML_FILE_PATH.read_text(
+INDEX_HTML_FILE_CONTENT: str = INDEX_HTML_FILE_PATH.read_text(
     encoding='utf-8')
 assert INDEX_HTML_FILE_PATH.exists(), 'index.html not found'
 
 LIST_HTML_FILE_PATH: Path = Path("static/templates/list.html")
-LIST_HTML_FILE_CONTENT: Path = LIST_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
 assert LIST_HTML_FILE_PATH.exists(), 'list.html not found'
+LIST_HTML_FILE_CONTENT: str = LIST_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert len(LIST_HTML_FILE_CONTENT) > 0, 'list.html content could not be loaded'
+
 
 ADD_HTML_FILE_PATH: Path = Path("static/templates/listAddManually.html")
-ADD_HTML_FILE_CONTENT: Path = ADD_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
 assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
+ADD_HTML_FILE_CONTENT: str = ADD_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert len(
+    ADD_HTML_FILE_CONTENT) > 0, 'listAddManually.html content could not be loaded'
 
 
-VIDEO_DIR = 'downloads'
-
+VIDEO_DIR: str = 'downloads'
 
 video_db: list[Video] = []
-for video_file in os.listdir('downloads/'):
+for video_file in os.listdir(VIDEO_DIR):
     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
         video = Video(name=video_file, path=os.path.join(
-            'downloads', video_file))
+            VIDEO_DIR, video_file))
         video_db.append(video)
 
 
-@app.get("/")
+@app.get(
+    path='/',
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
 async def read_root() -> HTMLResponse:
     """Homepage
 
@@ -76,8 +84,12 @@ async def read_root() -> HTMLResponse:
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
-@app.get("/list", response_class=HTMLResponse)
-async def list_videos_template(request: Request) -> HTMLResponse:
+@app.get(
+    path='/list',
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK
+)
+async def list_videos_get_method(request: Request) -> HTMLResponse:
     """Returns a HTML page listing all available videos
 
     Parameters
@@ -101,7 +113,7 @@ async def list_videos_template(request: Request) -> HTMLResponse:
     )
 
 
-@app.get("/videos/{video_name}")
+@app.get("/videos/{video_name}", response_class=FileResponse)
 async def get_video(video_name: str) -> FileResponse:
     """Checks the availabillity of a specific video 
 
@@ -113,32 +125,24 @@ async def get_video(video_name: str) -> FileResponse:
     Returns
     -------
     FileResponse
-        Returns the path, where the given video is located s
+        Returns the path, where the given video is located 
     """
+    # TODO in case the video is not in the database, return a 404 or something
     video_path = os.path.join(VIDEO_DIR, video_name)
     return FileResponse(video_path)
 
 
-# @app.get('/list/a')
-# async def list_videos():
-#     videos = [f for f in os.listdir(
-#         VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
-#     v_name = [f.split('.')[0] for f in videos]
-#     return [
-#         Video(name=v_name[i], path=videos[i]) for i in range(len(videos))
-#     ]
+# Currently commented as it might not be used anymore
+# @ app.get("/add", response_class=HTMLResponse)
+# async def add_video() -> HTMLResponse:
+#     """Add a video manually to the list
 
-
-@ app.get("/add")
-async def add_video() -> HTMLResponse:
-    """Add a video manually to the list
-
-    Returns
-    -------
-    HTMLResponse
-        HTML page providing the tools, to add a video manually to the list
-    """
-    return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+#     Returns
+#     -------
+#     HTMLResponse
+#         HTML page providing the tools, to add a video manually to the list
+#     """
+#     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 # @app.get("/download", response_class=HTMLResponse)
 # async def download_video() -> HTMLResponse:
@@ -159,8 +163,12 @@ async def add_video() -> HTMLResponse:
 #     except subprocess.CalledProcessError as error:
 #         raise HTTPException(status_code=400, detail=str(error))
 
-@app.get("/download")
-async def download_video() -> HTMLResponse:
+@app.get(
+    path="/download",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED
+)
+async def download_video_get_method() -> HTMLResponse:
     """Provides a HTML page where a video url text field is provided
 
     Returns
@@ -171,8 +179,12 @@ async def download_video() -> HTMLResponse:
     return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
 
 
-@app.put("/download")
-async def download_video_via_url(url_model: URL) -> HTMLResponse:
+@app.put(
+    path="/download",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED
+)
+async def download_video_put_method(url_model: URL) -> HTMLResponse:
     """Runs a background command that downloads the given video and puts it into the library 
 
     Parameters
@@ -183,7 +195,7 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
     Returns
     -------
     HTMLResponse
-        returns massage in terminal if video was downloadet successfully
+        returns massage in terminal if video was downloaded successfully
 
     Raises
     ------
@@ -202,9 +214,10 @@ async def download_video_via_url(url_model: URL) -> HTMLResponse:
 
     except subprocess.CalledProcessError as error:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error)
+        )
 
-        # raise HTTPException(status_code=400, detail=str(error))
 
 
 # TODO if is used in server, add docstring (as above) or comment out/remove
