@@ -8,6 +8,7 @@
   <link rel="icon" type="image/x-icon" href="static/Favicons/favicon_download_cyan.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="static/styles.css">
   <style>
     body,
     html {
@@ -17,35 +18,18 @@
       justify-content: center;
       align-items: center;
       font-family: 'Roboto', sans-serif;
-      transition: background-color 0.3s, color 0.3s;
+      text-align: center;
+      transition: background-color 1s, color 1s;
     }
 
     .container {
-      width: 300px;
+      width: 500px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-
-    .dark-mode {
-      background-color: #121212;
-      color: #ffffff;
-    }
-
-    .light-mode {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .dark-mode .input-field input {
-      color: #ffffff;
-      border-bottom: 1px solid #ffffff;
-    }
-
-    .dark-mode .input-field label {
-      color: #ffffff;
-    }
   </style>
+
 </head>
 
 <body class="light-mode">
@@ -62,7 +46,7 @@
         Dark
       </label>
     </div>
-    <h1 class="header">Downloader for videos</h1>
+    <h1 class="header">Download Videos</h1>
     <div class="input-field">
       <input id="text" type="text" class="validate">
       <label for="text">Video URL</label>

@@ -9,12 +9,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="/static/styles.css">
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      transition: background-color 1s, color 1s;
+    }
+  </style>
+
 </head>
 
 <body class="light-mode">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="static/templates/logic.js"></script>
-  
+
   <div class="container">
     <div class="switch-container">
       <div class="switch">
@@ -31,10 +46,10 @@
     <a href="http://127.0.0.1:8000/download" class="btn-large waves-effect waves-light">Download a Video via URL</a>
     <a href="http://127.0.0.1:8000/list" class="btn-large waves-effect waves-light">List of all Videos</a>
     <a href="https://github.com/MyGodItsFull0fStars/media-server-client"
-    class="btn-large waves-effect waves-light">GitHub</a>
+      class="btn-large waves-effect waves-light">GitHub</a>
     <a href="http://127.0.0.1:8000/docs" class="btn-large waves-effect waves-light">FastAPI Documentation</a>
   </div>
-  
+
   <script>
     window.addEventListener("blur", () => {
       document.title = "Come Back QwQ"

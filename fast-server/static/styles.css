@@ -7,12 +7,12 @@ body, html {
   align-items: center;
   font-family: 'Roboto', sans-serif;
   text-align: center;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 1s, color 1s;
 }
-.container {
+/* .container {
   width: 80%;
   max-width: 600px;
-}
+} */
 h1 {
   font-size: 3rem;
   font-weight: 500;
@@ -31,10 +31,26 @@ h2 {
   background-color: #121212;
   color: #ffffff;
 }
+
+.grey-mode {
+  background-color: #7b7b7b;
+  color: #ffffff;
+}
+
 .light-mode {
   background-color: #ffffff;
   color: #000000;
 }
+
+.dark-mode .input-field input {
+  color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+
+.dark-mode .input-field label {
+  color: #ffffff;
+}
+
 .switch-container {
   display: flex;
   justify-content: center;
