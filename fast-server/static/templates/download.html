@@ -122,6 +122,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -130,7 +131,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
-    body, html {
+    body,
+    html {
       height: 100%;
       margin: 0;
       display: flex;
@@ -139,29 +141,35 @@
       font-family: 'Roboto', sans-serif;
       transition: background-color 0.3s, color 0.3s;
     }
+
     .container {
       width: 300px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
+
     .dark-mode {
       background-color: #121212;
       color: #ffffff;
     }
+
     .light-mode {
       background-color: #ffffff;
       color: #000000;
     }
+
     .dark-mode .input-field input {
       color: #ffffff;
       border-bottom: 1px solid #ffffff;
     }
+
     .dark-mode .input-field label {
       color: #ffffff;
     }
   </style>
 </head>
+
 <body class="light-mode">
 
   <div class="container">
@@ -181,18 +189,18 @@
     <button class="btn waves-effect waves-light" type="button" id="submit-button">Download
       <i class="material-icons right"></i>
     </button>
-    
+
     <a href="http://127.0.0.1:8000/" class="btn waves-effect waves-light">Back to Homepage</a>
   </div>
 
   <script>
-        window.addEventListener("blur", () =>{
+    window.addEventListener("blur", () => {
       document.title = "Come Back :("
     })
-    window.addEventListener("focus", () =>{
+    window.addEventListener("focus", () => {
       document.title = "Download"
     })
-    document.getElementById('mode-switch').addEventListener('change', function() {
+    document.getElementById('mode-switch').addEventListener('change', function () {
       if (this.checked) {
         document.body.classList.remove('light-mode');
         document.body.classList.add('dark-mode');
@@ -251,7 +259,7 @@
 
     fetchVideos();
 
-    document.getElementById('submit-button').addEventListener('click', async function() {
+    document.getElementById('submit-button').addEventListener('click', async function () {
       const textValue = document.getElementById('text').value;
 
       const response = await fetch('http://127.0.0.1:8000/download', {
@@ -268,10 +276,5 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
+
 </html>
-
-
-
-
-
-
