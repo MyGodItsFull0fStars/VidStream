@@ -54,6 +54,8 @@
 
 <body class="light-mode">
 
+  <script src="static/templates/logic.js"></script>
+
   <div class="container">
     <h1 class="header">Video List</h1>
     <div class="switch">
@@ -87,7 +89,7 @@
       document.title = "Come Back :("
     })
     window.addEventListener("focus", () => {
-      document.title = "Video Lobrary"
+      document.title = "Video Library"
     })
     document.getElementById('mode-switch').addEventListener('change', function () {
       if (this.checked) {
@@ -99,14 +101,6 @@
       }
     });
 
-    function playVideo(video) {
-      const videoPlayer = document.getElementById('video-player');
-      const videoSource = document.getElementById('video-source');
-      videoSource.src = video;
-      videoPlayer.style.display = 'block';
-      videoPlayer.load();
-      videoPlayer.play();
-    }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
