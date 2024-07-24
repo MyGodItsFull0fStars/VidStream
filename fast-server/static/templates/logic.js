@@ -1,3 +1,6 @@
+const lightDarkModeCookieName = "light-dark-mode";
+const lightMode = "light-mode";
+const darkMode = "dark-mode";
 
 function getCookie(cookieName) {
     let name = cookieName + "=";
@@ -23,7 +26,6 @@ function getCookie(cookieName) {
 
 function setCookie(cookieName, cookieValue) {
     document.cookie = cookieName + "=" + cookieValue + ";path=/";
-    // document.cookie = cookieName + "=" + cookieValue + ";path=/";
 }
 
 
@@ -43,48 +45,16 @@ function playVideo(video) {
 }
 
 
-// <script>
-// window.addEventListener("blur", () => {
-//   document.title = "Come Back :("
-// })
-// window.addEventListener("focus", () => {
-//   document.title = "Video Library"
-// })
-
-// let lightDarkModeCookieName = "light-dark-mode";
-// let cookieValue = getCookie(lightDarkModeCookieName);
-// const light = "light";
-// const dark = "dark";
-
-// if (cookieValue.length > 0) {
-//   if (cookieValue == dark) {
-//     modeSwitch.checked = true;
-//     document.body.classList.remove('light-mode');
-//     document.body.classList.add('dark-mode');
-//   } else {
-//     this.checked = false;
-//     document.body.classList.remove('dark-mode');
-//     document.body.classList.add('light-mode');
-//   }
-// } else {
-//   // light mode is the default
-//   this.checked = false;
-//   document.body.classList.remove('dark-mode');
-//   document.body.classList.add('light-mode');
-//   setCookie(lightDarkModeCookieName, light);
-// }
-
-
-// document.getElementById('mode-switch').addEventListener('change', function () {
-//   if (this.checked) {
-//     document.body.classList.remove('light-mode');
-//     document.body.classList.add('dark-mode');
-//     setCookie(lightDarkModeCookieName, dark);
-//   } else {
-//     document.body.classList.remove('dark-mode');
-//     document.body.classList.add('light-mode');
-//     setCookie(lightDarkModeCookieName, light);
-//   }
-//   alert("WTF????")
-// });
-// </script>
+function checkboxSwitchLever(doc, isChecked) {
+    if (isChecked) {
+        doc.getElementById('mode-switch').checked = true;
+        doc.body.classList.remove(lightMode);
+        doc.body.classList.add(darkMode);
+        setCookie(lightDarkModeCookieName, darkMode);
+    } else {
+        doc.getElementById('mode-switch').checked = false;
+        doc.body.classList.remove(darkMode);
+        doc.body.classList.add(lightMode);
+        setCookie(lightDarkModeCookieName, lightMode);
+    }
+}
