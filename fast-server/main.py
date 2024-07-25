@@ -213,10 +213,7 @@ async def download_video_put_method(url_model: URL) -> HTMLResponse:
         return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=status.HTTP_201_CREATED)
 
     except subprocess.CalledProcessError as error:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(error)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
 
 
 
@@ -280,6 +277,6 @@ async def submit(request: Request) -> HTMLResponse:
     #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
-# @ app.get('/list')
-# async def video_list() -> HTMLResponse:
-#     return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+@ app.get('/list')
+async def video_list() -> HTMLResponse:
+    return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
