@@ -43,6 +43,11 @@ INDEX_HTML_FILE_CONTENT: str = INDEX_HTML_FILE_PATH.read_text(
     encoding='utf-8')
 assert INDEX_HTML_FILE_PATH.exists(), 'index.html not found'
 
+LOADING_HTML_FILE_PATH: Path = Path("static/templates/loading.html")
+LOADING_HTML_FILE_CONTENT: str = LOADING_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert LOADING_HTML_FILE_PATH.exists(), 'loading.html not found'
+
 LIST_HTML_FILE_PATH: Path = Path("static/templates/list.html")
 assert LIST_HTML_FILE_PATH.exists(), 'list.html not found'
 LIST_HTML_FILE_CONTENT: str = LIST_HTML_FILE_PATH.read_text(
@@ -177,6 +182,22 @@ async def download_video_get_method() -> HTMLResponse:
         HTML page
     """
     return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
+
+
+@app.get(
+        path="/loading",
+        response_class=HTMLResponse,
+        status_code=status.HTTP_200_OK
+)
+async def loading_page_get_method() -> HTMLResponse:
+    """Provides a HTML page where a loading animation and redirect buttons are provided
+    
+    Returns
+    -------
+    HTMLResonse
+        HTML page
+    """
+    return HTMLResponse(content=LOADING_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
 @app.put(
