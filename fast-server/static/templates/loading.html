@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloading</title>
+    <link rel="icon" type="image/x-icon" href="static/Favicons/favicon_loading_cyan.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+            color: #000;
+            font-family: 'Roboto', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #00bfff;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #00bfff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="switch">
+        <label>
+            Light
+            <input type="checkbox" id="mode-switch">
+            <span class="lever"></span>
+            Dark
+        </label>
+    </div>
+    <h1>Downloading...</h1>
+    <div class="loader"></div>
+    <div class="buttons">
+        <a href="/list" class="btn waves-effect waves-light">Go to Video Library</a>
+        <a href="/" class="btn waves-effect waves-light">Back to Homepage</a>
+    </div>
+    <script>
+        window.addEventListener("blur", () => {
+      document.title = "Hey get back, I'm not done yet >:("
+    })
+    window.addEventListener("focus", () => {
+      document.title = "Downloading"
+    })
+        document.getElementById('mode-switch').addEventListener('change', function () {
+            document.body.classList.toggle('dark-mode', this.checked);
+        });
+        window.onload = () => {
+      let cookieValue = getCookie(lightDarkModeCookieName);
+      checkboxSwitchLever(document, cookieValue == darkMode);
+    }
+    </script>
+</body>
+</html>
