@@ -54,14 +54,10 @@
     <button class="btn waves-effect waves-light" type="button" id="submit-button">Download
       <i class="material-icons right"></i>
     </button>
-    <div>
-      <!-- source: https://pixabay.com/gifs/load-loading-christmas-socks-2765/ -->
-      <img src="static/loading.gif" alt="this slowpoke moves"  width="250" />
-    </div>
-
+    
     <a href="http://127.0.0.1:8000/" class="btn waves-effect waves-light">Back to Homepage</a>
   </div>
-
+  
   <script>
     window.addEventListener("blur", () => {
       document.title = "Come Back 🥺"
@@ -73,49 +69,42 @@
       let cookieValue = getCookie(lightDarkModeCookieName);
       checkboxSwitchLever(document, cookieValue == darkMode);
     }
-
+    
     document.getElementById('mode-switch').addEventListener('change', function () {
       let cookieValue = getCookie(lightDarkModeCookieName);
       checkboxSwitchLever(document, cookieValue != darkMode);
     });
-
-    async function startDownload() {
-      document.getElementById('progress-bar').style.display = 'block';
-      const response = await fetch('http://127.0.0.1:8000/download', {
-        method: 'POST',
-      });
-      if (response.ok) {
-        checkProgress();
-      }
-    }
-
-    async function checkProgress() {
-      const response = await fetch('http://127.0.0.1:8000/progress');
-      const data = await response.json();
-      const progressBar = document.getElementById('progress');
-      progressBar.style.width = `${data.progress}%`;
-      if (data.progress < 100) {
-        setTimeout(checkProgress, 1000);
-      } else {
-        alert('Download complete');
-      }
-    }
-
+    
     document.getElementById('submit-button').addEventListener('click', async function () {
-      const textValue = document.getElementById('text').value;
-
-      const response = await fetch('http://127.0.0.1:8000/download', {
+    const textValue = document.getElementById('text').value;
+  
+    const response = await fetch('http://127.0.0.1:8000/download', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "url": textValue })
-      });
-
-      const result = await response.json();
-      alert(`Server response: ${result.message}`);
+        body: JSON.stringify({ url: textValue })
     });
-  </script>
+  
+    const result = await response.json();
+    if (response.ok) {
+        window.location.href = "/loading";
+    } else {
+        alert(`Server response: ${result.message}`);
+    }
+    // async function startDownload() {
+    //   document.getElementById('progress-bar').style.display = 'block';
+    //   const response = await fetch('http://127.0.0.1:8000/download', {
+    //     method: 'POST',
+    //   });
+    //   if (response.ok) {
+    //     checkProgress();
+    //   }
+    // }
+    
+    
+});
+    </script>
 </body>
 
 </html>
