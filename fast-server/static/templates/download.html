@@ -54,10 +54,10 @@
     <button class="btn waves-effect waves-light" type="button" id="submit-button">Download
       <i class="material-icons right"></i>
     </button>
-    
+
     <a href="http://127.0.0.1:8000/" class="btn waves-effect waves-light">Back to Homepage</a>
   </div>
-  
+
   <script>
     window.addEventListener("blur", () => {
       document.title = "Come Back 🥺"
@@ -69,42 +69,42 @@
       let cookieValue = getCookie(lightDarkModeCookieName);
       checkboxSwitchLever(document, cookieValue == darkMode);
     }
-    
+
     document.getElementById('mode-switch').addEventListener('change', function () {
       let cookieValue = getCookie(lightDarkModeCookieName);
       checkboxSwitchLever(document, cookieValue != darkMode);
     });
-    
+
     document.getElementById('submit-button').addEventListener('click', async function () {
-    const textValue = document.getElementById('text').value;
-  
-    const response = await fetch('http://127.0.0.1:8000/download', {
+      const textValue = document.getElementById('text').value;
+
+      
+      const response = await fetch('http://127.0.0.1:8000/download', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ url: textValue })
+      });
+      
+      window.location.replace("http://127.0.0.1:8000/loading");
+
+      const result = await response.json();
+
+      
+
+      // async function startDownload() {
+      //   document.getElementById('progress-bar').style.display = 'block';
+      //   const response = await fetch('http://127.0.0.1:8000/download', {
+      //     method: 'POST',
+      //   });
+      //   if (response.ok) {
+      //     checkProgress();
+      //   }
+      // }
+
     });
-  
-    const result = await response.json();
-    if (response.ok) {
-        window.location.href = "/loading";
-    } else {
-        alert(`Server response: ${result.message}`);
-    }
-    // async function startDownload() {
-    //   document.getElementById('progress-bar').style.display = 'block';
-    //   const response = await fetch('http://127.0.0.1:8000/download', {
-    //     method: 'POST',
-    //   });
-    //   if (response.ok) {
-    //     checkProgress();
-    //   }
-    // }
-    
-    
-});
-    </script>
+  </script>
 </body>
 
 </html>
