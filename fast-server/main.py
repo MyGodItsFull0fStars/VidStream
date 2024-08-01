@@ -119,9 +119,11 @@ async def read_root() -> HTMLResponse:
 async def teapot_page() -> HTMLResponse:
     return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=418)
 
+
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exc):
     return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=418)
+
 
 @app.post(
     path="/",
@@ -184,38 +186,6 @@ async def get_video(video_name: str) -> FileResponse:
     # TODO in case the video is not in the database, return a 404 or something
     video_path = os.path.join(VIDEO_DIR, video_name)
     return FileResponse(video_path)
-
-
-# Currently commented as it might not be used anymore
-# @ app.get("/add", response_class=HTMLResponse)
-# async def add_video() -> HTMLResponse:
-#     """Add a video manually to the list
-
-#     Returns
-#     -------
-#     HTMLResponse
-#         HTML page providing the tools, to add a video manually to the list
-#     """
-#     return HTMLResponse(content=ADD_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
-
-# @app.get("/download", response_class=HTMLResponse)
-# async def download_video() -> HTMLResponse:
-#     """Provides a HTML page where a video url text field is provided"""
-#     return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
-
-# @app.put("/download")
-# async def download_via_url(url_model: URL) -> HTMLResponse:
-#     """Runs a background command that downloads the given video and puts it into the library"""
-#     try:
-#         background_command = [
-#             'yt-dlp',
-#             '-o', os.path.join('OUTPUT_PATH', '%(title)s.%(ext)s'),
-#             url_model.url,
-#         ]
-#         subprocess.run(background_command, check=True)
-#         return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=201)
-#     except subprocess.CalledProcessError as error:
-#         raise HTTPException(status_code=400, detail=str(error))
 
 
 @app.get(
@@ -287,67 +257,6 @@ async def download_video_put_method(url_model: URL) -> HTMLResponse:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)
         ) from error
-
-
-# TODO if is used in server, add docstring (as above) or comment out/remove
-@app.post("/submit")
-async def submit(request: Request) -> HTMLResponse:
-    data = await request.json()
-    text_value = data.get("text")
-    print(f"Received text: {text_value}")
-
-    return HTMLResponse(
-        content={"message": "Text received", "text": text_value},
-        status_code=status.HTTP_201_CREATED,
-    )
-
-
-# PROGRESS_FILE = "progress.txt"
-
-# for video_file in os.listdir('downloads/'):
-#     if video_file.endswith('.mp4') or video_file.endswith('.webm'):
-#         video = Video(name=video_file, path=os.path.join('downloads', video_file))
-#         video_db.append(video)
-
-# def download_simulation(file_name: str):
-#     global PROGRESS
-#     total_steps = 10
-#     for step in range(total_steps):
-#         PROGRESS = (step + 1) / total_steps * 100
-#         time.sleep(1)  # Simulate time taken for downloading each chunk
-#     # Simulate moving the file to the video directory
-#     os.makedirs(VIDEO_DIR, exist_ok=True)
-#     shutil.copy(file_name, os.path.join(VIDEO_DIR, os.path.basename(file_name)))
-#     PROGRESS = 100
-
-# @app.post("/download")
-# async def start_download(background_tasks: BackgroundTasks):
-#     background_tasks.add_task(download_simulation, "dummy_video.mp4")
-#     return {"message": "Download started"}
-
-# @app.get("/progress")
-# async def get_progress():
-#     if os.path.exists(PROGRESS_FILE):
-#         with open(PROGRESS_FILE, 'r') as f:
-#             lines = f.readlines()
-#             if lines:
-#                 return {"progress": float(lines[-1])}
-#     return {"progress": 0}
-
-
-# @app.post("/download")
-# async def start_download(background_tasks: BackgroundTasks):
-#     global PROGRESS
-#     PROGRESS = 0
-#     background_tasks.add_task(download_simulation, "dummy_video.mp4")
-#     return {"message": "Download started"}
-
-# @app.get("/progress")
-# async def get_progress():
-#     return {"progress": PROGRESS}
-
-# raise HTTPException(
-#     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
 @app.get("/list")
