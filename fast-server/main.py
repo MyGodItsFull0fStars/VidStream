@@ -117,7 +117,11 @@ async def read_root() -> HTMLResponse:
 
 @app.get("/teapot", response_class=HTMLResponse)
 async def teapot_page() -> HTMLResponse:
-    return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=200)
+    return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=418)
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc):
+    return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=418)
 
 @app.post(
     path="/",
