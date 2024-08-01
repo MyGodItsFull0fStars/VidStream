@@ -43,6 +43,11 @@ INDEX_HTML_FILE_PATH: Path = Path("static/templates/index.html")
 INDEX_HTML_FILE_CONTENT: str = INDEX_HTML_FILE_PATH.read_text(encoding="utf-8")
 assert INDEX_HTML_FILE_PATH.exists(), "index.html not found"
 
+TEAPOT_HTML_FILE_PATH: Path = Path("static/templates/teapot.html")
+TEAPOT_HTML_FILE_CONTENT: str = TEAPOT_HTML_FILE_PATH.read_text(
+    encoding='utf-8')
+assert TEAPOT_HTML_FILE_PATH.exists(), 'teapot.html not found'
+
 LOADING_HTML_FILE_PATH: Path = Path("static/templates/loading.html")
 LOADING_HTML_FILE_CONTENT: str = LOADING_HTML_FILE_PATH.read_text(
     encoding="utf-8")
@@ -109,6 +114,10 @@ async def read_root() -> HTMLResponse:
     """
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
+
+@app.get("/teapot", response_class=HTMLResponse)
+async def teapot_page() -> HTMLResponse:
+    return HTMLResponse(content=TEAPOT_HTML_FILE_CONTENT, status_code=200)
 
 @app.post(
     path="/",
