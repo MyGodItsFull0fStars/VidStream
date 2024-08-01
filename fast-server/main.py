@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 from pathlib import Path
+from typing import Dict
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,64 +18,84 @@ logging.basicConfig(level=logging.DEBUG)
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*']
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates: Jinja2Templates = Jinja2Templates(directory="static/templates")
 
 DOWNLOAD_HTML_FILE_PATH: Path = Path("static/templates/download.html")
-assert DOWNLOAD_HTML_FILE_PATH.exists(), 'download.html not found'
+assert DOWNLOAD_HTML_FILE_PATH.exists(), "download.html not found"
 DOWNLOAD_HTML_FILE_CONTENT: str = DOWNLOAD_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
+    encoding="utf-8")
 assert len(
-    DOWNLOAD_HTML_FILE_CONTENT) > 0, 'download.html content could not be loaded'
+    DOWNLOAD_HTML_FILE_CONTENT) > 0, "download.html content could not be loaded"
 
-OUTPUT_PATH: str = os.path.join(os.getcwd(), 'downloads')
+OUTPUT_PATH: str = os.path.join(os.getcwd(), "downloads")
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
-assert len(OUTPUT_PATH) > 0, 'invalid output path'
+assert len(OUTPUT_PATH) > 0, "invalid output path"
 
 INDEX_HTML_FILE_PATH: Path = Path("static/templates/index.html")
-INDEX_HTML_FILE_CONTENT: str = INDEX_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
-assert INDEX_HTML_FILE_PATH.exists(), 'index.html not found'
+INDEX_HTML_FILE_CONTENT: str = INDEX_HTML_FILE_PATH.read_text(encoding="utf-8")
+assert INDEX_HTML_FILE_PATH.exists(), "index.html not found"
 
 LOADING_HTML_FILE_PATH: Path = Path("static/templates/loading.html")
 LOADING_HTML_FILE_CONTENT: str = LOADING_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
-assert LOADING_HTML_FILE_PATH.exists(), 'loading.html not found'
+    encoding="utf-8")
+assert LOADING_HTML_FILE_PATH.exists(), "loading.html not found"
 
 LIST_HTML_FILE_PATH: Path = Path("static/templates/list.html")
-assert LIST_HTML_FILE_PATH.exists(), 'list.html not found'
-LIST_HTML_FILE_CONTENT: str = LIST_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
-assert len(LIST_HTML_FILE_CONTENT) > 0, 'list.html content could not be loaded'
+assert LIST_HTML_FILE_PATH.exists(), "list.html not found"
+LIST_HTML_FILE_CONTENT: str = LIST_HTML_FILE_PATH.read_text(encoding="utf-8")
+assert len(LIST_HTML_FILE_CONTENT) > 0, "list.html content could not be loaded"
 
 
 ADD_HTML_FILE_PATH: Path = Path("static/templates/listAddManually.html")
-assert ADD_HTML_FILE_PATH.exists(), 'listAddManually.html not found'
-ADD_HTML_FILE_CONTENT: str = ADD_HTML_FILE_PATH.read_text(
-    encoding='utf-8')
-assert len(
-    ADD_HTML_FILE_CONTENT) > 0, 'listAddManually.html content could not be loaded'
+assert ADD_HTML_FILE_PATH.exists(), "listAddManually.html not found"
+ADD_HTML_FILE_CONTENT: str = ADD_HTML_FILE_PATH.read_text(encoding="utf-8")
+assert (
+    len(ADD_HTML_FILE_CONTENT) > 0
+), "listAddManually.html content could not be loaded"
 
 
-VIDEO_DIR: str = 'downloads'
+VIDEO_DIR: str = "downloads"
 
 video_db: list[Video] = []
 for video_file in os.listdir(VIDEO_DIR):
-    if video_file.endswith('.mp4') or video_file.endswith('.webm'):
+    if video_file.endswith(".mp4") or video_file.endswith(".webm"):
         video = Video(name=video_file, path=os.path.join(
             VIDEO_DIR, video_file))
         video_db.append(video)
 
 
+class TeapotException(HTTPException):
+    def __init__(self, detail=None, headers: Dict[str, str] | None = None) -> None:
+        super().__init__(418, detail, headers)
+
+
+@app.exception_handler(TeapotException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    # TODO add teapot here
+    html_content = """
+    <html>
+        <head>
+            <title>418 Method Not Allowed</title>
+        </head>
+        <body>
+            <h1>418 Method Not Allowed</h1>
+            <p>The method is not allowed for the requested URL.</p>
+        </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content, status_code=exc.status_code)
+
+
 @app.get(
-    path='/',
+    path="/",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
@@ -84,16 +105,28 @@ async def read_root() -> HTMLResponse:
     Returns
     -------
     HTMLResponse
-        A HTML Page consisting every important redirect 
+        A HTML Page consisting every important redirect
     """
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 
-@app.get(
-    path='/list',
+@app.post(
+    path="/",
     response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_418_IM_A_TEAPOT,
 )
+async def teapot() -> HTMLResponse:
+    """Homepage
+
+    Returns
+    -------
+    HTMLResponse
+        A HTML Page consisting every important redirect
+    """
+    raise TeapotException("root")
+
+
+@app.get(path="/list", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 async def list_videos_get_method(request: Request) -> HTMLResponse:
     """Returns a HTML page listing all available videos
 
@@ -107,20 +140,23 @@ async def list_videos_get_method(request: Request) -> HTMLResponse:
     HTMLResponse
         A HTML page consisting of available videos
     """
-    videos = [{"name": f.split('.')[0], "path": f"/videos/{f}"}
-              for f in os.listdir(VIDEO_DIR) if f.endswith((".mp4", ".webm", ".ogg"))]
+    videos = [
+        {"name": f.split(".")[0], "path": f"/videos/{f}"}
+        for f in os.listdir(VIDEO_DIR)
+        if f.endswith((".mp4", ".webm", ".ogg"))
+    ]
 
     return templates.TemplateResponse(
         request=request,
         name="list.html",
         context={"videos": videos},
-        status_code=status.HTTP_200_OK
+        status_code=status.HTTP_200_OK,
     )
 
 
 @app.get("/videos/{video_name}", response_class=FileResponse)
 async def get_video(video_name: str) -> FileResponse:
-    """Checks the availabillity of a specific video 
+    """Checks the availabillity of a specific video
 
     Parameters
     ----------
@@ -130,7 +166,7 @@ async def get_video(video_name: str) -> FileResponse:
     Returns
     -------
     FileResponse
-        Returns the path, where the given video is located 
+        Returns the path, where the given video is located
     """
     # TODO in case the video is not in the database, return a 404 or something
     video_path = os.path.join(VIDEO_DIR, video_name)
@@ -168,10 +204,9 @@ async def get_video(video_name: str) -> FileResponse:
 #     except subprocess.CalledProcessError as error:
 #         raise HTTPException(status_code=400, detail=str(error))
 
+
 @app.get(
-    path="/download",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_201_CREATED
+    path="/download", response_class=HTMLResponse, status_code=status.HTTP_201_CREATED
 )
 async def download_video_get_method() -> HTMLResponse:
     """Provides a HTML page where a video url text field is provided
@@ -181,37 +216,35 @@ async def download_video_get_method() -> HTMLResponse:
     HTMLResponse
         HTML page
     """
-    return HTMLResponse(content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED)
+    return HTMLResponse(
+        content=DOWNLOAD_HTML_FILE_CONTENT, status_code=status.HTTP_201_CREATED
+    )
 
 
-@app.get(
-        path="/loading",
-        response_class=HTMLResponse,
-        status_code=status.HTTP_200_OK
-)
+@app.get(path="/loading", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 async def loading_page_get_method() -> HTMLResponse:
     """Provides a HTML page where a loading animation and redirect buttons are provided
-    
+
     Returns
     -------
     HTMLResonse
         HTML page
     """
-    return HTMLResponse(content=LOADING_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
+    return HTMLResponse(
+        content=LOADING_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK
+    )
 
 
 @app.put(
-    path="/download",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_201_CREATED
+    path="/download", response_class=HTMLResponse, status_code=status.HTTP_201_CREATED
 )
 async def download_video_put_method(url_model: URL) -> HTMLResponse:
-    """Runs a background command that downloads the given video and puts it into the library 
+    """Runs a background command that downloads the given video and puts it into the library
 
     Parameters
     ----------
     url_model : URL
-        gets the URL, that was given in the textflied in download.html 
+        gets the URL, that was given in the textflied in download.html
 
     Returns
     -------
@@ -221,21 +254,26 @@ async def download_video_put_method(url_model: URL) -> HTMLResponse:
     Raises
     ------
     HTTPException
-        if something goes wrong, raise error 
+        if something goes wrong, raise error
     """
     try:
         background_command = [
-            'yt-dlp',
-            '-o', os.path.join(OUTPUT_PATH, '%(title)s.%(ext)s'),
+            "yt-dlp",
+            "-o",
+            os.path.join(OUTPUT_PATH, "%(title)s.%(ext)s"),
             url_model.url,
         ]
         subprocess.run(background_command, check=True)
 
-        return HTMLResponse(content=f"Video {url_model.url} downloaded successfully", status_code=status.HTTP_201_CREATED)
+        return HTMLResponse(
+            content=f"Video {url_model.url} downloaded successfully",
+            status_code=status.HTTP_201_CREATED,
+        )
 
     except subprocess.CalledProcessError as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
-
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)
+        ) from error
 
 
 # TODO if is used in server, add docstring (as above) or comment out/remove
@@ -247,8 +285,9 @@ async def submit(request: Request) -> HTMLResponse:
 
     return HTMLResponse(
         content={"message": "Text received", "text": text_value},
-        status_code=status.HTTP_201_CREATED
+        status_code=status.HTTP_201_CREATED,
     )
+
 
 # PROGRESS_FILE = "progress.txt"
 
@@ -294,10 +333,10 @@ async def submit(request: Request) -> HTMLResponse:
 # async def get_progress():
 #     return {"progress": PROGRESS}
 
-    # raise HTTPException(
-    #     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+# raise HTTPException(
+#     status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
 
 
-@ app.get('/list')
+@app.get("/list")
 async def video_list() -> HTMLResponse:
     return HTMLResponse(content=LIST_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
