@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I'm a Teapot</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+        }
+        p {
+            font-size: 1.5em;
+        }
+        .btn-custom {
+            background-color: #00bfa5 !important;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+        .light-mode {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+        .switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="switch-container">
+        <label>
+            Light
+            <input type="checkbox" id="theme-switch">
+            <span class="lever"></span>
+            Dark
+        </label>
+    </div>
+    <div class="container">
+        <h1>418 - I'm a Teapot</h1>
+        <p>The requested action cannot be performed because I'm a teapot.</p>
+        <a href="/" class="btn btn-custom waves-effect waves-light">Go to Homepage</a>
+    </div>
+    <script>
+        const switchElement = document.getElementById('theme-switch');
+        const bodyElement = document.body;
+
+        switchElement.addEventListener('change', function() {
+            if (this.checked) {
+                bodyElement.classList.remove('light-mode');
+                bodyElement.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark-mode');
+                bodyElement.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
