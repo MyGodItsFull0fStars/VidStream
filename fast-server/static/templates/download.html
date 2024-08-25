@@ -87,7 +87,13 @@
         body: JSON.stringify({ url: textValue })
       });
       
-      window.location.replace("http://127.0.0.1:8000/loading");
+      if(textValue === "M"){
+        window.location.replace("http://127.0.0.1:8000/easteregg")
+      }
+      else{
+        window.location.replace("http://127.0.0.1:8000/loading");
+      }
+      
 
       const result = await response.json();
 
