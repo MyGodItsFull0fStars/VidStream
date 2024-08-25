@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUV U ^^</title>
+  <link rel="icon" type="image/x-icon" href="static/Favicons/favicon_home_cyan.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="/static/styles.css">
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      transition: background-color 1s, color 1s;
+    }
+
+    .heart {
+        color: orange;
+        font-size: 10em;
+    }
+  </style>
+
+</head>
+
+<body class="light-mode">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="static/templates/logic.js"></script>
+
+  <div class="container">
+    <div class="switch-container">
+      <div class="switch">
+        <label>
+          Light
+          <input type="checkbox" id="mode-switch">
+          <span class="lever"></span>
+          Dark
+        </label>
+      </div>
+    </div>
+    <h1>Hab dich ganz dolle lieb mein Schatzi und das werde ich auch immer haben &lt;3</h1>
+    <div class="heart">🧡</div>
+    <a href="/" class="btn btn-custom waves-effect waves-light">Go to Homepage</a>
+  </div>
+
+  <script>
+    window.addEventListener("blur", () => {
+      document.title = "STILL LUV U ^^"
+    });
+    window.addEventListener("focus", () => {
+      document.title = "LUV U ^^"
+    });
+
+    window.onload = () => {
+      let cookieValue = getCookie(lightDarkModeCookieName);
+      checkboxSwitchLever(document, cookieValue == darkMode);
+    }
+
+    document.getElementById('mode-switch').addEventListener('change', function () {
+      let cookieValue = getCookie(lightDarkModeCookieName);
+      checkboxSwitchLever(document, cookieValue != darkMode);
+    });
+  </script>
+</body>
+</html>
