@@ -58,6 +58,9 @@ assert LIST_HTML_FILE_PATH.exists(), "list.html not found"
 LIST_HTML_FILE_CONTENT: str = LIST_HTML_FILE_PATH.read_text(encoding="utf-8")
 assert len(LIST_HTML_FILE_CONTENT) > 0, "list.html content could not be loaded"
 
+EASTEREGG_HTML_FILE_PATH: Path = Path("static/templates/easteregg.html")
+EASTEREGG_HTML_FILE_CONTENT: str = EASTEREGG_HTML_FILE_PATH.read_text(encoding="utf-8")
+assert EASTEREGG_HTML_FILE_PATH.exists(), "easteregg.html not found"
 
 ADD_HTML_FILE_PATH: Path = Path("static/templates/listAddManually.html")
 assert ADD_HTML_FILE_PATH.exists(), "listAddManually.html not found"
@@ -114,6 +117,13 @@ async def read_root() -> HTMLResponse:
     """
     return HTMLResponse(content=INDEX_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
+@app.get(
+    path="/easteregg",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def read_easteregg() -> HTMLResponse:
+    return HTMLResponse(content=EASTEREGG_HTML_FILE_CONTENT, status_code=status.HTTP_200_OK)
 
 @app.get("/teapot", response_class=HTMLResponse)
 async def teapot_page() -> HTMLResponse:
